@@ -1,13 +1,22 @@
+import { useEffect, useState } from 'react'
 import { greeting, coolNames } from '../../utils'
 
-const getCoolName = () => {
-  return coolNames[Math.floor(Math.random() * coolNames.length)]
-}
-
 export const Greeting = () => {
+  const [coolName, setCoolName] = useState('')
+
+  const getCoolName = () => {
+    setCoolName(coolNames[Math.floor(Math.random() * coolNames.length)])
+  }
+
+  useEffect(() => {
+    getCoolName()
+  }, [])
+
   return (
-    <h2 className="mt-2 text-4xl font-semibold text-white drop-shadow-xl">
-      {greeting()}, {getCoolName()}
-    </h2>
+    <>
+      <h2 className="mt-2 text-4xl font-semibold text-white drop-shadow-xl">
+        {greeting()}, {coolName}
+      </h2>
+    </>
   )
 }
