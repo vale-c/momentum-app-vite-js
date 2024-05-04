@@ -11,24 +11,14 @@ interface StoicQuote {
   text: string
 }
 
-const date = new Date()
-const hours = date.getHours()
-const minutes = date.getMinutes().toString().padStart(2, '0')
-
 const App = () => {
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: window.innerWidth,
     height: window.innerHeight
   })
 
-  const handleResize = () => {
-    setDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight
-    })
-  }
-
   const [quote, setQuote] = useState<StoicQuote>({ author: '', text: '' })
+  const [imageSeed, setImageSeed] = useState('seed')
 
   const fetchStoicQuote = async () => {
     try {
@@ -42,9 +32,15 @@ const App = () => {
     }
   }
 
+  const handleResize = () => {
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
+  }
+
   useEffect(() => {
     const throttledResize = throttle(handleResize, 300)
-
     window.addEventListener('resize', throttledResize)
     fetchStoicQuote()
 
@@ -53,7 +49,11 @@ const App = () => {
     }
   }, [])
 
-  const imageUrl = `https://picsum.photos/seed/picsum/${dimensions.width}/${dimensions.height}`
+  const refreshBg = () => {
+    setImageSeed(Date.now().toString())
+  }
+
+  const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}`
 
   return (
     <div
@@ -63,7 +63,10 @@ const App = () => {
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <h1 className="text-9xl font-bold text-white drop-shadow-xl">
-            {hours}:{minutes}
+            {`${new Date().getHours()}:${new Date()
+              .getMinutes()
+              .toString()
+              .padStart(2, '0')}`}
           </h1>
           {quote.author && quote.text && (
             <div className="absolute bottom-4 mx-8 mt-16 max-w-xl rounded-lg bg-black/40 sm:mx-0">
@@ -75,6 +78,12 @@ const App = () => {
               </blockquote>
             </div>
           )}
+          <button
+            className="fixed bottom-4 right-4 hidden rounded-lg bg-black/50 px-4 py-2 text-white transition-colors hover:bg-white hover:text-black sm:block"
+            onClick={refreshBg}
+          >
+            🔄🖼️
+          </button>
         </div>
       </div>
     </div>
