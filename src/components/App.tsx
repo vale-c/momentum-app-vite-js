@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { throttle } from '../utils'
+import { coolNames, throttle } from '../utils'
 
-interface Dimensions {
+interface BgDimensions {
   width: number
   height: number
 }
@@ -11,14 +11,32 @@ interface StoicQuote {
   text: string
 }
 
+const date = new Date()
+const hours = date.getHours()
+const minutes = date.getMinutes().toString().padStart(2, '0')
+
+const greeting = () => {
+  if (hours < 12) {
+    return 'Good morning'
+  } else if (hours < 18) {
+    return 'Good afternoon'
+  } else {
+    return 'Good evening'
+  }
+}
+
+const getCoolName = () => {
+  return coolNames[Math.floor(Math.random() * coolNames.length)]
+}
+
 const App = () => {
-  const [dimensions, setDimensions] = useState<Dimensions>({
+  const [dimensions, setDimensions] = useState<BgDimensions>({
     width: window.innerWidth,
     height: window.innerHeight
   })
 
   const [quote, setQuote] = useState<StoicQuote>({ author: '', text: '' })
-  const [imageSeed, setImageSeed] = useState('seed')
+  const [imageSeed, setImageSeed] = useState('picsumSeed')
 
   const fetchStoicQuote = async () => {
     try {
@@ -63,11 +81,11 @@ const App = () => {
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <h1 className="text-9xl font-bold text-white drop-shadow-xl">
-            {`${new Date().getHours()}:${new Date()
-              .getMinutes()
-              .toString()
-              .padStart(2, '0')}`}
+            {hours}:{minutes}
           </h1>
+          <h2 className="mt-2 text-4xl font-semibold text-white drop-shadow-xl">
+            {greeting()}, {getCoolName()}
+          </h2>
           {quote.author && quote.text && (
             <div className="absolute bottom-4 mx-8 mt-16 max-w-xl rounded-lg bg-black/40 sm:mx-0">
               <blockquote className="p-3 text-center text-xl italic text-white shadow-xl">

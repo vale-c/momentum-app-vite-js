@@ -32,3 +32,26 @@ export const throttle = (fn: Function, wait: number = 300) => {
     }
   }
 }
+
+export const coolNames = [
+  'Sparkle Ninja',
+  'Neon Whisper',
+  'Cosmic Explorer',
+  'Pixel Pirate',
+  'Galactic Jester',
+  'Laser Unicorn',
+  'Quantum Dreamer',
+  'Cyber Samurai',
+  'Space Cowboy',
+  'Techno Wizard',
+  'Funky Monkey',
+  'Disco Dancer',
+  'Mystic Mermaid',
+  'Retro Rockstar',
+  'Electric Eel',
+  'Groovy Guru',
+  'Virtual Voyager',
+  'Fantasy Phoenix',
+  'Rainbow Rider',
+  'Mindful Magician'
+]
