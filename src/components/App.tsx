@@ -15,13 +15,6 @@ const date = new Date()
 const hours = date.getHours()
 const minutes = date.getMinutes().toString().padStart(2, '0')
 
-const generateRandomPicId = () => {
-  const min = 0
-  const max = 1083
-
-  return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
 const App = () => {
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: window.innerWidth,
@@ -60,9 +53,7 @@ const App = () => {
     }
   }, [])
 
-  const imageUrl = `https://picsum.photos/id/${generateRandomPicId()}/${
-    dimensions.width
-  }/${dimensions.height}`
+  const imageUrl = `https://picsum.photos/seed/picsum/${dimensions.width}/${dimensions.height}`
 
   return (
     <div
