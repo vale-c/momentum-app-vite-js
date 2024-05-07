@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { Quote } from './Quote'
 import { Time } from './Time'
 import { Greeting } from './Greeting'
+import { Settings } from './Settings'
+import { SettingsModal } from './Settings/SettingsModal'
 
-interface BgDimensions {
+type BgDimensions = {
   width: number
   height: number
 }
@@ -14,36 +16,41 @@ const App = () => {
     height: 0
   })
   const [imageSeed, setImageSeed] = useState('random-image-seed')
-  const imageAspectRatio = 16 / 9 // Assuming the image has a 16:9 aspect ratio
 
-  const handleResize = () => {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const windowAspectRatio = width / height
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const toggleSettings = () => setIsSettingsOpen((prev) => !prev)
+  const closeSettings = () => setIsSettingsOpen(false)
 
-    let newWidth = width
-    let newHeight = height
-
-    if (windowAspectRatio > imageAspectRatio) {
-      // Window is wider than the image aspect ratio
-      newHeight = Math.round(width / imageAspectRatio)
-    } else {
-      // Window is taller than the image aspect ratio
-      newWidth = Math.round(height * imageAspectRatio)
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      closeSettings()
     }
-
-    setDimensions({ width: newWidth, height: newHeight })
   }
 
   useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const windowAspectRatio = width / height
+      const imageAspectRatio = 16 / 9
+      const newDimensions =
+        windowAspectRatio > imageAspectRatio
+          ? { width, height: Math.round(width / imageAspectRatio) }
+          : { width: Math.round(height * imageAspectRatio), height }
+      setDimensions(newDimensions)
+    }
+
     window.addEventListener('resize', handleResize)
     handleResize()
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const refreshBg = () => {
-    setImageSeed(Date.now().toString())
-  }
+  useEffect(() => {
+    if (isSettingsOpen) {
+      document.addEventListener('keydown', handleKeyDown)
+    }
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isSettingsOpen])
 
   const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=10`
 
@@ -57,12 +64,12 @@ const App = () => {
           <Time />
           <Greeting />
           <Quote />
-          <button
-            className="fixed bottom-4 right-4 rounded-lg bg-black/50 px-4 py-2 text-white transition-colors hover:bg-white hover:text-black sm:block"
-            onClick={refreshBg}
-          >
-            🔄🖼️
-          </button>
+          <Settings onToggle={toggleSettings} isModalOpen={isSettingsOpen} />
+          <SettingsModal
+            isOpen={isSettingsOpen}
+            onClose={closeSettings}
+            setImageSeed={setImageSeed}
+          />
         </div>
       </div>
     </div>
