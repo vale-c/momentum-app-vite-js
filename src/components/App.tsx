@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { throttle } from '../utils'
 import { Quote } from './Quote'
 import { Time } from './Time'
 import { Greeting } from './Greeting'
@@ -11,26 +10,35 @@ interface BgDimensions {
 
 const App = () => {
   const [dimensions, setDimensions] = useState<BgDimensions>({
-    width: window.innerWidth,
-    height: window.innerHeight
+    width: 0,
+    height: 0
   })
-
-  const [imageSeed, setImageSeed] = useState('picsumSeed')
+  const [imageSeed, setImageSeed] = useState('random-image-seed')
+  const imageAspectRatio = 16 / 9 // Assuming the image has a 16:9 aspect ratio
 
   const handleResize = () => {
-    setDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight
-    })
+    const width = window.innerWidth
+    const height = window.innerHeight
+    const windowAspectRatio = width / height
+
+    let newWidth = width
+    let newHeight = height
+
+    if (windowAspectRatio > imageAspectRatio) {
+      // Window is wider than the image aspect ratio
+      newHeight = Math.round(width / imageAspectRatio)
+    } else {
+      // Window is taller than the image aspect ratio
+      newWidth = Math.round(height * imageAspectRatio)
+    }
+
+    setDimensions({ width: newWidth, height: newHeight })
   }
 
   useEffect(() => {
-    const throttledResize = throttle(handleResize, 300)
-    window.addEventListener('resize', throttledResize)
-
-    return () => {
-      window.removeEventListener('resize', throttledResize)
-    }
+    window.addEventListener('resize', handleResize)
+    handleResize()
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const refreshBg = () => {
@@ -50,7 +58,7 @@ const App = () => {
           <Greeting />
           <Quote />
           <button
-            className="fixed bottom-4 right-4 hidden rounded-lg bg-black/50 px-4 py-2 text-white transition-colors hover:bg-white hover:text-black sm:block"
+            className="fixed bottom-4 right-4 rounded-lg bg-black/50 px-4 py-2 text-white transition-colors hover:bg-white hover:text-black sm:block"
             onClick={refreshBg}
           >
             🔄🖼️
