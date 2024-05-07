@@ -4,6 +4,7 @@ import { Time } from './Time'
 import { Greeting } from './Greeting'
 import { Settings } from './Settings'
 import { SettingsModal } from './Settings/SettingsModal'
+import { Weather } from './Weather'
 
 type BgDimensions = {
   width: number
@@ -64,6 +65,7 @@ const App = () => {
           <Time />
           <Greeting />
           <Quote />
+          <Weather />
           <Settings onToggle={toggleSettings} isModalOpen={isSettingsOpen} />
           <SettingsModal
             isOpen={isSettingsOpen}
