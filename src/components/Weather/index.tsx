@@ -14,7 +14,10 @@ type WeatherData = {
   temperature: number
   weatherCode: number
   description: string
+  fetchedAt: number
 }
+
+const CACHE_DURATION = 30 * 60 * 1000
 
 const getWeatherIcon = (weatherCode: number) => {
   switch (weatherCode) {
@@ -68,12 +71,14 @@ export const Weather = () => {
       )
       const data = await response.json()
       if (data.current_weather) {
-        const { temperature, weathercode } = data.current_weather
-        setWeather({
-          temperature,
-          weatherCode: weathercode,
-          description: getWeatherDescription(weathercode)
-        })
+        const weatherData = {
+          temperature: data.current_weather.temperature,
+          weatherCode: data.current_weather.weathercode,
+          description: getWeatherDescription(data.current_weather.weathercode),
+          fetchedAt: Date.now()
+        }
+        localStorage.setItem('weatherData', JSON.stringify(weatherData))
+        setWeather(weatherData)
       } else {
         setError('Unable to fetch weather data.')
       }
@@ -114,6 +119,16 @@ export const Weather = () => {
   }
 
   const getLocationAndFetchWeather = () => {
+    const savedWeatherData = localStorage.getItem('weatherData')
+    if (savedWeatherData) {
+      const weatherData: WeatherData = JSON.parse(savedWeatherData)
+      if (Date.now() - weatherData.fetchedAt < CACHE_DURATION) {
+        setWeather(weatherData)
+        setLoading(false)
+        return
+      }
+    }
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -130,7 +145,6 @@ export const Weather = () => {
       setLoading(false)
     }
   }
-
   useEffect(() => {
     getLocationAndFetchWeather()
   }, [])
