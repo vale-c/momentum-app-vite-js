@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Quote } from './Quote'
 import { Time } from './Time'
-import { Greeting } from './Greeting'
+import { coolNames, greeting } from '../utils'
 import { Settings } from './Settings'
 import { SettingsModal } from './Settings/SettingsModal'
 import { Weather } from './Weather'
@@ -18,6 +18,11 @@ const App = () => {
   })
   const [imageSeed, setImageSeed] = useState('random-image-seed')
   const [blur, setBlur] = useState(10)
+  const [coolName, setCoolName] = useState(coolNames[0])
+
+  const getCoolName = () => {
+    setCoolName(coolNames[Math.floor(Math.random() * coolNames.length)])
+  }
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const toggleSettings = () => setIsSettingsOpen((prev) => !prev)
@@ -65,7 +70,9 @@ const App = () => {
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <Time />
-          <Greeting />
+          <h2 className="mx-8 mt-8 text-center text-3xl font-normal capitalize text-white drop-shadow-xl sm:mx-8">
+            {greeting}, {coolName}
+          </h2>
           <Quote />
           <Weather />
           <Settings onToggle={toggleSettings} isModalOpen={isSettingsOpen} />
@@ -74,6 +81,7 @@ const App = () => {
             onClose={closeSettings}
             setImageSeed={setImageSeed}
             setBlur={setBlur}
+            fetchNewGreeting={getCoolName}
           />
         </div>
       </div>

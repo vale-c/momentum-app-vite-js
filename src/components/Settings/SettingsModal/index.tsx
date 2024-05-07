@@ -2,19 +2,22 @@ import { useRef, useState } from 'react'
 import { RefreshBgButton } from '../RefreshBgButton'
 import { RefreshQuoteButton } from '../RefreshQuoteButton'
 import { useQuote } from '../../Quote/context'
+import { RefreshGreetingButton } from '../RefreshGreetingButton'
 
 type SettingsModalProps = {
   isOpen: boolean
   onClose: () => void
   setImageSeed: (seed: string) => void
   setBlur: (blur: number) => void
+  fetchNewGreeting: () => void
 }
 
 export const SettingsModal = ({
   isOpen,
   onClose,
   setImageSeed,
-  setBlur
+  setBlur,
+  fetchNewGreeting
 }: SettingsModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
   const { fetchQuote } = useQuote()
@@ -64,6 +67,12 @@ export const SettingsModal = ({
               className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
             />
           </div>
+        </div>
+        <h2 className="ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+          Greeting
+        </h2>
+        <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+          <RefreshGreetingButton fetchNewGreeting={fetchNewGreeting} />
         </div>
         <h2 className="ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Quote

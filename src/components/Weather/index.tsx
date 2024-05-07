@@ -160,7 +160,7 @@ export const Weather = () => {
     return null
   }
   return (
-    <div className="flex flex-col items-center rounded-lg p-4 text-center text-white">
+    <div className="mt-8 flex flex-col items-center rounded-lg p-4 text-center text-white">
       {getWeatherIcon(weather.weatherCode)}
       <h2 className="text-2xl font-bold">{weather.temperature}°C</h2>
       <p>{weather.description}</p>
