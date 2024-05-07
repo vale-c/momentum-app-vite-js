@@ -51,6 +51,7 @@ const App = () => {
       document.addEventListener('keydown', handleKeyDown)
     }
     return () => document.removeEventListener('keydown', handleKeyDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSettingsOpen])
 
   const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=10`
