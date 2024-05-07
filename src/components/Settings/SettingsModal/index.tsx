@@ -41,11 +41,12 @@ export const SettingsModal = ({
         ref={modalRef}
         className="h-full w-96 overflow-y-auto bg-gray-900 p-4 text-white"
       >
-        <h2 className="mb-4 border-b border-gray-700 pb-2 text-lg font-medium">
+        <h2 className="my-4 ml-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Background
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-4 rounded-lg bg-gray-800 p-3">
           <RefreshBgButton setImageSeed={setImageSeed} />
+          <hr className="border-gray-700" />
           <div className="flex items-center gap-4">
             <label htmlFor="blur-slider" className="mb-2 block text-sm">
               Blur Intensity
