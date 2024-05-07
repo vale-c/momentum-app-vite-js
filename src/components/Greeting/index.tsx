@@ -14,8 +14,8 @@ export const Greeting = () => {
 
   return (
     <>
-      <h2 className="mt-2 text-4xl font-semibold text-white drop-shadow-xl">
-        {greeting()}, {coolName}
+      <h2 className="mt-2 text-4xl font-normal capitalize text-white drop-shadow-xl">
+        {greeting}, {coolName}
       </h2>
     </>
   )

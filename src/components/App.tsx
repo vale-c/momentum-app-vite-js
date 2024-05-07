@@ -37,7 +37,7 @@ const App = () => {
     setImageSeed(Date.now().toString())
   }
 
-  const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}`
+  const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=10`
 
   return (
     <div

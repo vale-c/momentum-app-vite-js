@@ -30,14 +30,30 @@ export const coolNames = [
   'Mindful Magician'
 ]
 
-export const date = new Date()
-export const hours = date.getHours()
-export const minutes = date.getMinutes().toString().padStart(2, '0')
+const currentDate = new Date()
 
-export const greeting = () => {
-  if (hours < 12) {
+// Function to format the date and time
+function formatDateTime(date: Date) {
+  return {
+    hours: date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }),
+    dayOfWeek: date.toLocaleDateString('en-US', {
+      weekday: 'long', // Abbreviated day, e.g., "Tue"
+      month: 'short', // Abbreviated month, e.g., "May"
+      day: 'numeric' // Day of the month
+    })
+  }
+}
+
+// Greeting based on the current hour
+function getGreeting(date: Date): string {
+  const hour = date.getHours()
+  if (hour < 12) {
     return 'Good morning'
-  } else if (hours < 18) {
+  } else if (hour < 18) {
     return 'Good afternoon'
   } else {
     return 'Good evening'
@@ -69,3 +85,7 @@ export const throttle = (fn: Function, wait: number = 300) => {
     }
   }
 }
+
+export const greeting = getGreeting(currentDate)
+
+export const { hours, dayOfWeek } = formatDateTime(currentDate)
