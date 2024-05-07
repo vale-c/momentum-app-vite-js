@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react'
 import { RefreshBgButton } from '../RefreshBgButton'
+import { RefreshQuoteButton } from '../RefreshQuoteButton'
+import { useQuote } from '../../Quote/context'
 
 type SettingsModalProps = {
   isOpen: boolean
   onClose: () => void
   setImageSeed: (seed: string) => void
-  setBlur: (blur: number) => void // Function to set blur level
+  setBlur: (blur: number) => void
 }
 
 export const SettingsModal = ({
@@ -15,6 +17,7 @@ export const SettingsModal = ({
   setBlur
 }: SettingsModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
+  const { fetchQuote } = useQuote()
 
   const handleCloseClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -61,6 +64,12 @@ export const SettingsModal = ({
               className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
             />
           </div>
+        </div>
+        <h2 className="ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+          Quote
+        </h2>
+        <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+          <RefreshQuoteButton fetchNewQuote={fetchQuote} />
         </div>
       </div>
     </div>

@@ -1,28 +1,12 @@
-import { useEffect, useState } from 'react'
-
-type StoicQuote = {
-  author: string
-  text: string
-}
+import { useEffect } from 'react'
+import { useQuote } from './context'
 
 export const Quote = () => {
-  const [quote, setQuote] = useState<StoicQuote>({ author: '', text: '' })
-
-  const fetchStoicQuote = async () => {
-    try {
-      const response = await fetch('https://stoic-quotes.com/api/quote')
-      const data = await response.json()
-      if (data) {
-        setQuote(data)
-      }
-    } catch (error) {
-      console.error('Failed to fetch Stoic quote:', error)
-    }
-  }
+  const { quote, fetchQuote } = useQuote()
 
   useEffect(() => {
-    fetchStoicQuote()
-  }, [])
+    fetchQuote()
+  }, [fetchQuote])
 
   return (
     <>
