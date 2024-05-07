@@ -17,6 +17,7 @@ const App = () => {
     height: 0
   })
   const [imageSeed, setImageSeed] = useState('random-image-seed')
+  const [blur, setBlur] = useState(10)
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const toggleSettings = () => setIsSettingsOpen((prev) => !prev)
@@ -54,7 +55,7 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSettingsOpen])
 
-  const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=10`
+  const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=${blur}`
 
   return (
     <div
@@ -72,6 +73,7 @@ const App = () => {
             isOpen={isSettingsOpen}
             onClose={closeSettings}
             setImageSeed={setImageSeed}
+            setBlur={setBlur}
           />
         </div>
       </div>
