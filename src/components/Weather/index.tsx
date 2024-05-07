@@ -136,11 +136,11 @@ export const Weather = () => {
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div className="text-center text-white">Loading...</div>
   }
 
   if (error) {
-    return <div className="text-red-600">{error}</div>
+    return <div className="text-center text-red-600">{error}</div>
   }
 
   if (!weather) {
@@ -148,7 +148,7 @@ export const Weather = () => {
   }
 
   return (
-    <div className="flex flex-col items-center rounded-lg p-4 text-white">
+    <div className="flex flex-col items-center rounded-lg p-4 text-center text-white">
       {getWeatherIcon(weather.weatherCode)}
       <h2 className="text-2xl font-bold">{weather.temperature}°C</h2>
       <p>{weather.description}</p>
