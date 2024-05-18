@@ -77,7 +77,7 @@ export const SettingsModal = ({
             />
           </div>
         </div>
-        <h2 className="ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="my-4 ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Greeting
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
@@ -108,7 +108,7 @@ export const SettingsModal = ({
             <RefreshGreetingButton fetchNewGreeting={fetchNewGreeting} />
           </div>
         </div>
-        <h2 className="ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="my-4 ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Quote
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
