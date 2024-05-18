@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useCallback,
-  useEffect
-} from 'react'
+import React, { createContext, useState, useContext, useCallback } from 'react'
 
 type StoicQuote = {
   author: string
@@ -13,7 +7,7 @@ type StoicQuote = {
 
 type QuoteContextType = {
   quote: StoicQuote
-  fetchQuote: () => void
+  fetchQuote: (forceUpdate?: boolean) => void
 }
 
 const QuoteContext = createContext<QuoteContextType | undefined>(undefined)
@@ -28,34 +22,28 @@ export const useQuote = () => {
 
 export const QuoteProvider = ({ children }: { children: React.ReactNode }) => {
   const [quote, setQuote] = useState<StoicQuote>(() => {
-    const localData = localStorage.getItem('stoicQuote')
-    return localData ? JSON.parse(localData) : { author: '', text: '' }
+    const savedQuote = localStorage.getItem('stoicQuote')
+    return savedQuote ? JSON.parse(savedQuote) : { author: '', text: '' }
   })
 
-  const fetchQuote = useCallback(() => {
-    if (!localStorage.getItem('stoicQuote')) {
-      // Ensure fetch only if not in localStorage
-      console.log('Fetching new quote since none in localStorage...')
-      fetch('https://stoic-quotes.com/api/quote')
-        .then((response) => response.json())
-        .then((data) => {
-          if (data) {
-            setQuote(data)
-            localStorage.setItem('stoicQuote', JSON.stringify(data))
-          }
-        })
-        .catch((error) => {
-          console.error('Failed to fetch Stoic quote:', error)
-        })
+  const fetchQuote = useCallback(async (forceUpdate = false) => {
+    // Only fetch new quote if there is no quote in localStorage or if forceUpdate is true
+    if (forceUpdate || !localStorage.getItem('stoicQuote')) {
+      console.log(
+        forceUpdate
+          ? 'Force updating quote...'
+          : 'No quote found in localStorage, fetching new quote...'
+      )
+      try {
+        const response = await fetch('https://stoic-quotes.com/api/quote')
+        const data = await response.json()
+        setQuote(data)
+        localStorage.setItem('stoicQuote', JSON.stringify(data))
+      } catch (error) {
+        console.error('Failed to fetch Stoic quote:', error)
+      }
     }
   }, [])
-
-  // Initialize the quote if empty
-  useEffect(() => {
-    if (!quote.author && !localStorage.getItem('stoicQuote')) {
-      fetchQuote()
-    }
-  }, [fetchQuote, quote.author])
 
   return (
     <QuoteContext.Provider value={{ quote, fetchQuote }}>

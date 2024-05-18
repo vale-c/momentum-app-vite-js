@@ -112,7 +112,7 @@ export const SettingsModal = ({
           Quote
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
-          <RefreshQuoteButton fetchNewQuote={fetchQuote} />
+          <RefreshQuoteButton fetchNewQuote={() => fetchQuote(true)} />
         </div>
       </div>
     </div>
