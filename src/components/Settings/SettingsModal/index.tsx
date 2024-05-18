@@ -3,6 +3,7 @@ import { RefreshBgButton } from '../RefreshBgButton'
 import { RefreshQuoteButton } from '../RefreshQuoteButton'
 import { useQuote } from '../../Quote/context'
 import { RefreshGreetingButton } from '../RefreshGreetingButton'
+import { ToggleComponent } from 'components/Ui/Toggle'
 
 type SettingsModalProps = {
   isOpen: boolean
@@ -10,6 +11,10 @@ type SettingsModalProps = {
   setImageSeed: (seed: string) => void
   setBlur: (blur: number) => void
   fetchNewGreeting: () => void
+  greetingName: string
+  setGreetingName: (name: string) => void
+  showGreeting: boolean
+  setShowGreeting: (show: boolean) => void
 }
 
 export const SettingsModal = ({
@@ -17,7 +22,11 @@ export const SettingsModal = ({
   onClose,
   setImageSeed,
   setBlur,
-  fetchNewGreeting
+  fetchNewGreeting,
+  greetingName,
+  setGreetingName,
+  showGreeting,
+  setShowGreeting
 }: SettingsModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
   const { fetchQuote } = useQuote()
@@ -72,7 +81,32 @@ export const SettingsModal = ({
           Greeting
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
-          <RefreshGreetingButton fetchNewGreeting={fetchNewGreeting} />
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-300">
+              Show Greeting
+            </span>
+            <ToggleComponent
+              isActive={showGreeting}
+              setIsActive={setShowGreeting}
+            />
+          </div>
+          <hr className="border-gray-700" />
+          <div className="flex items-center justify-between">
+            <label htmlFor="greeting-name" className="w-full text-sm">
+              Greeting Name
+            </label>
+            <input
+              id="greeting-name"
+              type="text"
+              value={greetingName}
+              onChange={(e) => setGreetingName(e.target.value)}
+              className="h-8 w-full rounded-lg bg-gray-800 px-3 text-gray-300"
+            />
+          </div>
+          <hr className="border-gray-700" />
+          <div className="rounded-lg bg-gray-800">
+            <RefreshGreetingButton fetchNewGreeting={fetchNewGreeting} />
+          </div>
         </div>
         <h2 className="ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Quote

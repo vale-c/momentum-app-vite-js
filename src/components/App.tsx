@@ -18,12 +18,15 @@ const App = () => {
   })
   const [imageSeed, setImageSeed] = useState('random-image-seed')
   const [blur, setBlur] = useState(10)
-  const [coolName, setCoolName] = useState(coolNames[0])
+  const [coolName, setCoolName] = useState(
+    () => localStorage.getItem('greetingName') || coolNames[0]
+  )
 
   const getCoolName = () => {
     setCoolName(coolNames[Math.floor(Math.random() * coolNames.length)])
   }
 
+  const [showGreeting, setShowGreeting] = useState(true)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const toggleSettings = () => setIsSettingsOpen((prev) => !prev)
   const closeSettings = () => setIsSettingsOpen(false)
@@ -60,6 +63,10 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSettingsOpen])
 
+  useEffect(() => {
+    localStorage.setItem('greetingName', coolName)
+  }, [coolName])
+
   const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=${blur}`
 
   return (
@@ -70,9 +77,11 @@ const App = () => {
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <Time />
-          <h2 className="mx-8 mt-8 text-center text-3xl font-normal capitalize text-white drop-shadow-xl sm:mx-8">
-            {greeting}, {coolName}
-          </h2>
+          {showGreeting && (
+            <h2 className="mx-8 mt-8 text-center text-3xl font-normal capitalize text-white drop-shadow-xl sm:mx-8">
+              {greeting}, {coolName}
+            </h2>
+          )}
           <Quote />
           <Weather />
           <Settings onToggle={toggleSettings} isModalOpen={isSettingsOpen} />
@@ -81,7 +90,13 @@ const App = () => {
             onClose={closeSettings}
             setImageSeed={setImageSeed}
             setBlur={setBlur}
-            fetchNewGreeting={getCoolName}
+            fetchNewGreeting={() => {
+              getCoolName()
+            }}
+            greetingName={coolName}
+            setGreetingName={setCoolName}
+            showGreeting={showGreeting}
+            setShowGreeting={setShowGreeting}
           />
         </div>
       </div>
