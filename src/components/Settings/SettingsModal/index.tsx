@@ -100,7 +100,7 @@ export const SettingsModal = ({
               type="text"
               value={greetingName}
               onChange={(e) => setGreetingName(e.target.value)}
-              className="h-8 w-full rounded-lg bg-gray-800 px-3 text-gray-300"
+              className="h-8 w-full rounded-lg bg-gray-700 px-3 text-gray-300"
             />
           </div>
           <hr className="border-gray-700" />
