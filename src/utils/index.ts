@@ -25,10 +25,11 @@ export const coolNames = [
   'Mindful Magician'
 ]
 
-const currentDate = new Date()
+export function getCurrentDate(): Date {
+  return new Date()
+}
 
-// Function to format the date and time
-function formatDateTime(date: Date) {
+export function formatDateTime(date: Date) {
   return {
     hours: date.toLocaleTimeString('en-US', {
       hour: 'numeric',
@@ -36,15 +37,14 @@ function formatDateTime(date: Date) {
       hour12: false
     }),
     dayOfWeek: date.toLocaleDateString('en-US', {
-      weekday: 'long', // Abbreviated day, e.g., "Tue"
-      month: 'short', // Abbreviated month, e.g., "May"
-      day: 'numeric' // Day of the month
+      weekday: 'long',
+      month: 'short',
+      day: 'numeric'
     })
   }
 }
 
-// Greeting based on the current hour
-function getGreeting(date: Date): string {
+export function getGreeting(date: Date): string {
   const hour = date.getHours()
   if (hour < 12) {
     return 'Good morning'
@@ -54,7 +54,3 @@ function getGreeting(date: Date): string {
     return 'Good evening'
   }
 }
-
-export const greeting = getGreeting(currentDate)
-
-export const { hours, dayOfWeek } = formatDateTime(currentDate)

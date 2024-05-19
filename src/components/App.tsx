@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Quote } from './Quote'
 import { Time } from './Time'
-import { coolNames, greeting } from '../utils'
+import { coolNames, getGreeting, getCurrentDate } from '../utils'
 import { Settings } from './Settings'
 import { SettingsModal } from './Settings/SettingsModal'
 import { Weather } from './Weather'
@@ -27,6 +27,8 @@ const App = () => {
   }
 
   const [showGreeting, setShowGreeting] = useState(true)
+  const [greeting, setGreeting] = useState(() => getGreeting(getCurrentDate()))
+
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const toggleSettings = () => setIsSettingsOpen((prev) => !prev)
   const closeSettings = () => setIsSettingsOpen(false)
@@ -68,6 +70,14 @@ const App = () => {
   }, [coolName])
 
   const imageUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=${blur}`
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setGreeting(getGreeting(getCurrentDate()))
+    }, 3600000) // Update greeting every hour to minimize unnecessary updates
+
+    return () => clearInterval(timer)
+  }, [])
 
   return (
     <div
