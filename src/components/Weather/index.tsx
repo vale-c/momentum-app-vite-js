@@ -149,15 +149,14 @@ export const Weather = () => {
       setLoading(false)
     }
   }
-
+  if (!weather) {
+    return null
+  }
   if (loading) {
     return <div className="text-center text-white">Loading...</div>
   }
   if (error) {
     return <div className="text-center text-red-600">{error}</div>
-  }
-  if (!weather) {
-    return null
   }
   return (
     <div className="mt-8 flex flex-col items-center rounded-lg p-4 text-center text-white">

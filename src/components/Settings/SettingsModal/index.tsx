@@ -82,7 +82,7 @@ export const SettingsModal = ({
         ref={modalRef}
         className="h-full w-96 overflow-y-auto bg-gray-900 p-4 text-white"
       >
-        <h2 className="my-4 ml-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="mb-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Background
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
@@ -100,7 +100,6 @@ export const SettingsModal = ({
               className="ml-2 rounded bg-gray-800 p-2 text-white"
             >
               <option value="picsum">Picsum</option>
-              <option value="unsplash">Unsplash</option>
               <option value="custom">Custom</option>
             </select>
           </div>

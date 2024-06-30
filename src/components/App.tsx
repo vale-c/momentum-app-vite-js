@@ -5,153 +5,159 @@ import { Settings } from './Settings'
 import { SettingsModal } from './Settings/SettingsModal'
 import { Weather } from './Weather'
 import fallbackImage from '../assets/sf-bg.avif'
-import {
-  coolNames,
-  getGreeting,
-  getCurrentDate,
-  determineCollectionId,
-  getUnsplashImageUrl
-} from '../utils'
-
-type BgDimensions = { width: number; height: number }
+import { coolNames, getGreeting, getCurrentDate } from '../utils'
 
 const App = () => {
-  const [dimensions, setDimensions] = useState<BgDimensions>({
-    width: window.innerWidth,
-    height: window.innerHeight
-  })
-  const [imageSeed, setImageSeed] = useState(
-    () => localStorage.getItem('imageSeed') || Math.random().toString()
-  )
-  const [bgSource, setBgSource] = useState(
-    () => localStorage.getItem('bgSource') || 'picsum'
-  )
-  const [customImageUrl, setCustomImageUrl] = useState<string>(
-    localStorage.getItem('customImageUrl') || ''
-  )
-  const [imageUrl, setImageUrl] = useState(fallbackImage)
-  const [coolName, setCoolName] = useState(
-    () => localStorage.getItem('greetingName') || coolNames[0]
-  )
-  const [blur, setBlur] = useState(() => {
-    const savedBlur = localStorage.getItem('blur')
-    return savedBlur ? parseInt(savedBlur, 10) : 5 // Default to 10 if nothing is stored
+  const [state, setState] = useState({
+    dimensions: { width: window.innerWidth, height: window.innerHeight },
+    imageSeed: localStorage.getItem('imageSeed') || Math.random().toString(),
+    bgSource: localStorage.getItem('bgSource') || 'picsum',
+    customImageUrl: localStorage.getItem('customImageUrl') || '',
+    imageUrl: fallbackImage,
+    coolName: localStorage.getItem('greetingName') || coolNames[0],
+    blur: parseInt(localStorage.getItem('blur') || '5'),
+    showGreeting: true,
+    greeting: getGreeting(getCurrentDate()),
+    isSettingsOpen: false
   })
 
   const getCoolName = () => {
-    setCoolName(coolNames[Math.floor(Math.random() * coolNames.length)])
+    setState((prevState) => ({
+      ...prevState,
+      coolName: coolNames[Math.floor(Math.random() * coolNames.length)]
+    }))
   }
-  const [showGreeting, setShowGreeting] = useState(true)
-  const [greeting, setGreeting] = useState(() => getGreeting(getCurrentDate()))
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   const updateGreeting = () => {
     const newGreeting = getGreeting(getCurrentDate())
-    if (newGreeting !== greeting) setGreeting(newGreeting)
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', updateDimensions)
-    return () => window.removeEventListener('resize', updateDimensions)
-  }, [])
-
-  const fetchBackgroundImage = (): void => {
-    switch (bgSource) {
-      case 'picsum':
-        setImageUrl(
-          `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=${blur}`
-        )
-        break
-      case 'unsplash':
-        // eslint-disable-next-line no-case-declarations
-        const collectionId = determineCollectionId()
-        getUnsplashImageUrl(collectionId).then((url) => setImageUrl(url))
-        return
-      case 'custom':
-        customImageUrl
-          ? setImageUrl(customImageUrl)
-          : setImageUrl(fallbackImage)
-        break
-      default:
-        setImageUrl(fallbackImage)
+    if (newGreeting !== state.greeting) {
+      setState((prevState) => ({ ...prevState, greeting: newGreeting }))
     }
   }
 
-  const updateDimensions = () => {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const windowAspectRatio = width / height
-    const imageAspectRatio = 16 / 9
-    const newDimensions =
-      windowAspectRatio > imageAspectRatio
-        ? { width, height: Math.round(width / imageAspectRatio) }
-        : { width: Math.round(height * imageAspectRatio), height }
-    setDimensions(newDimensions)
-  }
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const windowAspectRatio = width / height
+      const imageAspectRatio = 16 / 9
+      const newDimensions =
+        windowAspectRatio > imageAspectRatio
+          ? { width, height: Math.round(width / imageAspectRatio) }
+          : { width: Math.round(height * imageAspectRatio), height }
+      setState((prevState) => ({ ...prevState, dimensions: newDimensions }))
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
+    const fetchBackgroundImage = () => {
+      switch (state.bgSource) {
+        case 'picsum':
+          setState((prevState) => ({
+            ...prevState,
+            imageUrl: `https://picsum.photos/seed/${state.imageSeed}/${state.dimensions.width}/${state.dimensions.height}?blur=${state.blur}`
+          }))
+          break
+        case 'custom':
+          setState((prevState) => ({
+            ...prevState,
+            imageUrl: state.customImageUrl || fallbackImage
+          }))
+          break
+        default:
+          setState((prevState) => ({ ...prevState, imageUrl: fallbackImage }))
+      }
+    }
+
+    fetchBackgroundImage()
+  }, [
+    state.blur,
+    state.bgSource,
+    state.customImageUrl,
+    state.imageSeed,
+    state.dimensions
+  ])
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && state.isSettingsOpen) {
+        closeSettings()
+      }
+    }
+
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSettingsOpen])
+  }, [state.isSettingsOpen])
 
   useEffect(() => {
-    localStorage.setItem('greetingName', coolName)
-    localStorage.setItem('bgSource', bgSource)
-    localStorage.setItem('imageSeed', imageSeed)
-    localStorage.setItem('blur', blur.toString())
-    localStorage.setItem('customImageUrl', customImageUrl)
-    fetchBackgroundImage()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blur, customImageUrl, coolName, bgSource, imageSeed])
+    localStorage.setItem('greetingName', state.coolName)
+    localStorage.setItem('bgSource', state.bgSource)
+    localStorage.setItem('imageSeed', state.imageSeed)
+    localStorage.setItem('blur', state.blur.toString())
+    localStorage.setItem('customImageUrl', state.customImageUrl)
+  }, [state])
 
   useEffect(() => {
     const timer = setInterval(() => updateGreeting(), 3600000) // Every hour
     return () => clearInterval(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [greeting])
+  }, [state.greeting])
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' && isSettingsOpen) {
-      closeSettings()
-    }
-  }
-
-  const closeSettings = () => setIsSettingsOpen(false)
-  const toggleSettings = () => setIsSettingsOpen((prev) => !prev)
+  const closeSettings = () =>
+    setState((prevState) => ({ ...prevState, isSettingsOpen: false }))
+  const toggleSettings = () =>
+    setState((prevState) => ({
+      ...prevState,
+      isSettingsOpen: !prevState.isSettingsOpen
+    }))
 
   return (
     <div
       className="h-screen w-full bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url(${imageUrl})`
-      }}
+      style={{ backgroundImage: `url(${state.imageUrl})` }}
     >
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <Time />
-          {showGreeting && (
+          {state.showGreeting && (
             <h2 className="mx-8 mt-8 text-center text-3xl font-normal capitalize text-white drop-shadow-xl sm:mx-8">
-              {greeting}, {coolName}
+              {state.greeting}, {state.coolName}
             </h2>
           )}
           <Quote />
           <Weather />
-          <Settings onToggle={toggleSettings} isModalOpen={isSettingsOpen} />
+          <Settings
+            onToggle={toggleSettings}
+            isModalOpen={state.isSettingsOpen}
+          />
           <SettingsModal
-            isOpen={isSettingsOpen}
+            isOpen={state.isSettingsOpen}
             onClose={closeSettings}
-            setImageSeed={setImageSeed}
-            blur={blur}
-            setBlur={setBlur}
+            setImageSeed={(seed) =>
+              setState((prevState) => ({ ...prevState, imageSeed: seed }))
+            }
+            blur={state.blur}
+            setBlur={(blur) =>
+              setState((prevState) => ({ ...prevState, blur }))
+            }
             fetchNewGreeting={getCoolName}
-            greetingName={coolName}
-            setGreetingName={setCoolName}
-            showGreeting={showGreeting}
-            setShowGreeting={setShowGreeting}
-            bgSource={bgSource}
-            setBgSource={setBgSource}
-            setCustomImageUrl={setCustomImageUrl}
+            greetingName={state.coolName}
+            setGreetingName={(name) =>
+              setState((prevState) => ({ ...prevState, coolName: name }))
+            }
+            showGreeting={state.showGreeting}
+            setShowGreeting={(show) =>
+              setState((prevState) => ({ ...prevState, showGreeting: show }))
+            }
+            bgSource={state.bgSource}
+            setBgSource={(source) =>
+              setState((prevState) => ({ ...prevState, bgSource: source }))
+            }
+            setCustomImageUrl={(url) =>
+              setState((prevState) => ({ ...prevState, customImageUrl: url }))
+            }
           />
         </div>
       </div>

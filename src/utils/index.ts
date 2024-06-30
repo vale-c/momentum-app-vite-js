@@ -57,30 +57,6 @@ export function getGreeting(date: Date): string {
   }
 }
 
-export async function getUnsplashImageUrl(
-  collectionId: string
-): Promise<string> {
-  const url = `https://api.unsplash.com/photos/random?client_id=${
-    import.meta.env.VITE_UNSPLASH_ACCESS_KEY
-  }&collections=${collectionId}&orientation=landscape`
-
-  try {
-    const response = await fetch(url)
-    const photo = await response.json()
-    return photo.urls ? photo.urls.regular : ''
-  } catch (error) {
-    console.error('Failed to fetch random image from Unsplash:', error)
-    return ''
-  }
-}
-
-export function determineCollectionId(): string {
-  const hour = new Date().getHours()
-  const dayCollectionId = '4933370'
-  const nightCollectionId = 'VI5sx2SDQUg'
-  return hour >= 6 && hour < 18 ? dayCollectionId : nightCollectionId
-}
-
 export const resizeImage = async (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -120,12 +96,10 @@ export const resizeImage = async (file: File): Promise<string> => {
             unsharpThreshold: 2
           })
           .then((result: HTMLCanvasElement) =>
-            pica().toBlob(result, 'image/jpeg', 0.9)
+            result.toDataURL('image/jpeg', 0.9)
           )
-          .then((blob: Blob | MediaSource) => {
-            const urlCreator = window.URL || window.webkitURL
-            const imageUrl = urlCreator.createObjectURL(blob)
-            resolve(imageUrl)
+          .then((base64: string) => {
+            resolve(base64)
           })
           .catch(reject)
       }
