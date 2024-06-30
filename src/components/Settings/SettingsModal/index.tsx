@@ -116,21 +116,25 @@ export const SettingsModal = ({
             </div>
           )}
           <RefreshBgButton setImageSeed={setImageSeed} />
-          <hr className="border-gray-700" />
-          <div className="flex items-center gap-4">
-            <label htmlFor="blur-slider" className="mb-2 block text-sm">
-              Blur Intensity
-            </label>
-            <input
-              id="blur-slider"
-              type="range"
-              min="1"
-              max="10"
-              value={blur}
-              onChange={handleBlurChange}
-              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
-            />
-          </div>
+          {bgSource === 'picsum' && (
+            <>
+              <hr className="border-gray-700" />
+              <div className="flex items-center gap-4">
+                <label htmlFor="blur-slider" className="mb-2 block text-sm">
+                  Blur Intensity
+                </label>
+                <input
+                  id="blur-slider"
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={blur}
+                  onChange={handleBlurChange}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
+                />
+              </div>
+            </>
+          )}
         </div>
         <h2 className="my-4 ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Greeting
