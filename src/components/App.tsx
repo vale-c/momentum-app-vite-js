@@ -4,7 +4,7 @@ import { Time } from './Time'
 import { Settings } from './Settings'
 import { SettingsModal } from './Settings/SettingsModal'
 import { Weather } from './Weather'
-
+import fallbackImage from '../assets/sf-bg.avif'
 import {
   coolNames,
   getGreeting,
@@ -26,7 +26,10 @@ const App = () => {
   const [bgSource, setBgSource] = useState(
     () => localStorage.getItem('bgSource') || 'picsum'
   )
-  const [imageUrl, setImageUrl] = useState('')
+  const [customImageUrl, setCustomImageUrl] = useState<string>(
+    localStorage.getItem('customImageUrl') || ''
+  )
+  const [imageUrl, setImageUrl] = useState(fallbackImage)
   const [coolName, setCoolName] = useState(
     () => localStorage.getItem('greetingName') || coolNames[0]
   )
@@ -52,14 +55,25 @@ const App = () => {
     return () => window.removeEventListener('resize', updateDimensions)
   }, [])
 
-  const fetchBackgroundImage = () => {
-    if (bgSource === 'picsum') {
-      // Picsum supports blur directly in the URL.
-      const picsumUrl = `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=${blur}`
-      setImageUrl(picsumUrl)
-    } else {
-      const collectionId = determineCollectionId()
-      getUnsplashImageUrl(collectionId).then(setImageUrl)
+  const fetchBackgroundImage = (): void => {
+    switch (bgSource) {
+      case 'picsum':
+        setImageUrl(
+          `https://picsum.photos/seed/${imageSeed}/${dimensions.width}/${dimensions.height}?blur=${blur}`
+        )
+        break
+      case 'unsplash':
+        // eslint-disable-next-line no-case-declarations
+        const collectionId = determineCollectionId()
+        getUnsplashImageUrl(collectionId).then((url) => setImageUrl(url))
+        return
+      case 'custom':
+        customImageUrl
+          ? setImageUrl(customImageUrl)
+          : setImageUrl(fallbackImage)
+        break
+      default:
+        setImageUrl(fallbackImage)
     }
   }
 
@@ -86,9 +100,10 @@ const App = () => {
     localStorage.setItem('bgSource', bgSource)
     localStorage.setItem('imageSeed', imageSeed)
     localStorage.setItem('blur', blur.toString())
+    localStorage.setItem('customImageUrl', customImageUrl)
     fetchBackgroundImage()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blur, coolName, bgSource, imageSeed])
+  }, [blur, customImageUrl, coolName, bgSource, imageSeed])
 
   useEffect(() => {
     const timer = setInterval(() => updateGreeting(), 3600000) // Every hour
@@ -136,6 +151,7 @@ const App = () => {
             setShowGreeting={setShowGreeting}
             bgSource={bgSource}
             setBgSource={setBgSource}
+            setCustomImageUrl={setCustomImageUrl}
           />
         </div>
       </div>

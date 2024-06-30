@@ -4,6 +4,7 @@ import { RefreshQuoteButton } from '../RefreshQuoteButton'
 import { useQuote } from '../../Quote/context'
 import { RefreshGreetingButton } from '../RefreshGreetingButton'
 import { ToggleComponent } from 'components/Ui/Toggle'
+import { resizeImage } from '../../../utils'
 
 type SettingsModalProps = {
   isOpen: boolean
@@ -18,6 +19,7 @@ type SettingsModalProps = {
   setShowGreeting: (show: boolean) => void
   bgSource: string
   setBgSource: (source: string) => void
+  setCustomImageUrl: (url: string) => void
 }
 
 export const SettingsModal = ({
@@ -32,7 +34,8 @@ export const SettingsModal = ({
   showGreeting,
   setShowGreeting,
   bgSource,
-  setBgSource
+  setBgSource,
+  setCustomImageUrl
 }: SettingsModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
   const { fetchQuote } = useQuote()
@@ -52,6 +55,20 @@ export const SettingsModal = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setBgSource(event.target.value)
+  }
+
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event?.target?.files ? event?.target?.files[0] : null
+    if (file) {
+      try {
+        const resizedImageUrl = await resizeImage(file)
+        setCustomImageUrl(resizedImageUrl)
+      } catch (error) {
+        console.error('Error resizing image:', error)
+      }
+    }
   }
 
   if (!isOpen) return null
@@ -84,8 +101,20 @@ export const SettingsModal = ({
             >
               <option value="picsum">Picsum</option>
               <option value="unsplash">Unsplash</option>
+              <option value="custom">Custom</option>
             </select>
           </div>
+          {bgSource === 'custom' && (
+            <div className="flex items-center gap-4">
+              <label htmlFor="file-upload">Upload Custom Background:</label>
+              <input
+                type="file"
+                id="file-upload"
+                accept="image/*"
+                onChange={handleFileUpload}
+              />
+            </div>
+          )}
           <RefreshBgButton setImageSeed={setImageSeed} />
           <hr className="border-gray-700" />
           <div className="flex items-center gap-4">

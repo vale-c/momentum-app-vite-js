@@ -1,3 +1,5 @@
+import pica from 'pica'
+
 export function classNames(...classes: unknown[]): string {
   return classes.filter(Boolean).join(' ')
 }
@@ -77,4 +79,59 @@ export function determineCollectionId(): string {
   const dayCollectionId = '4933370'
   const nightCollectionId = 'VI5sx2SDQUg'
   return hour >= 6 && hour < 18 ? dayCollectionId : nightCollectionId
+}
+
+export const resizeImage = async (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          reject('Unable to get canvas context')
+          return
+        }
+
+        const maxWidth = 1920
+        const maxHeight = 1280
+        const imgRatio = img.width / img.height
+        const desiredRatio = maxWidth / maxHeight
+
+        let targetWidth = maxWidth
+        let targetHeight = maxHeight
+
+        if (imgRatio > desiredRatio) {
+          // Image is wider than desired aspect ratio
+          targetHeight = maxWidth / imgRatio
+        } else if (imgRatio < desiredRatio) {
+          // Image is taller than desired aspect ratio
+          targetWidth = maxHeight * imgRatio
+        }
+
+        canvas.width = targetWidth
+        canvas.height = targetHeight
+
+        pica()
+          .resize(img, canvas, {
+            unsharpAmount: 80,
+            unsharpRadius: 0.6,
+            unsharpThreshold: 2
+          })
+          .then((result: HTMLCanvasElement) =>
+            pica().toBlob(result, 'image/jpeg', 0.9)
+          )
+          .then((blob: Blob | MediaSource) => {
+            const urlCreator = window.URL || window.webkitURL
+            const imageUrl = urlCreator.createObjectURL(blob)
+            resolve(imageUrl)
+          })
+          .catch(reject)
+      }
+      img.src = event.target!.result as string
+    }
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
 }
