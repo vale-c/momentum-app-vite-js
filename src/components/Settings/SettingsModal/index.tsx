@@ -114,7 +114,9 @@ export const SettingsModal = ({
               />
             </div>
           )}
-          <RefreshBgButton setImageSeed={setImageSeed} />
+          {bgSource === 'picsum' && (
+            <RefreshBgButton setImageSeed={setImageSeed} />
+          )}
           {bgSource === 'picsum' && (
             <>
               <hr className="border-gray-700" />
