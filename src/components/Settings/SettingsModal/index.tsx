@@ -82,10 +82,10 @@ export const SettingsModal = ({
         ref={modalRef}
         className="h-full w-96 overflow-y-auto bg-gray-900 p-4 text-white"
       >
-        <h2 className="mb-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="mb-4 border-gray-700 text-sm font-medium uppercase tracking-widest text-gray-400">
           Background
         </h2>
-        <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+        <div className="space-y-2 rounded-lg bg-gray-800 p-4">
           <div className="flex items-center justify-between">
             <label
               htmlFor="background-source"
@@ -97,20 +97,26 @@ export const SettingsModal = ({
               id="background-source"
               value={bgSource}
               onChange={(e) => handleBgSourceChange(e)}
-              className="ml-2 rounded bg-gray-800 p-2 text-white"
+              className="ml-2 rounded bg-gray-800 text-white"
             >
               <option value="picsum">Picsum</option>
               <option value="custom">Custom</option>
             </select>
           </div>
           {bgSource === 'custom' && (
-            <div className="flex items-center gap-4">
-              <label htmlFor="file-upload">Upload Custom Background:</label>
+            <div className="flex flex-col">
+              <label
+                htmlFor="file-upload"
+                className="mb-2 text-sm text-gray-300"
+              >
+                Upload Custom Image:
+              </label>
               <input
                 type="file"
                 id="file-upload"
                 accept="image/*"
                 onChange={handleFileUpload}
+                className="cursor-pointer rounded-lg bg-gray-700 text-gray-300"
               />
             </div>
           )}
@@ -137,7 +143,7 @@ export const SettingsModal = ({
             </>
           )}
         </div>
-        <h2 className="my-4 ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="ml-4 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Greeting
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
@@ -168,7 +174,7 @@ export const SettingsModal = ({
             <RefreshGreetingButton fetchNewGreeting={fetchNewGreeting} />
           </div>
         </div>
-        <h2 className="my-4 ml-4 mt-6 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="ml-4 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Quote
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
