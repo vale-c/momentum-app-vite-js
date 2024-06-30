@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { RefreshBgButton } from '../RefreshBgButton'
 import { RefreshQuoteButton } from '../RefreshQuoteButton'
 import { useQuote } from '../../Quote/context'
@@ -9,24 +9,30 @@ type SettingsModalProps = {
   isOpen: boolean
   onClose: () => void
   setImageSeed: (seed: string) => void
+  blur: number
   setBlur: (blur: number) => void
   fetchNewGreeting: () => void
   greetingName: string
   setGreetingName: (name: string) => void
   showGreeting: boolean
   setShowGreeting: (show: boolean) => void
+  bgSource: string
+  setBgSource: (source: string) => void
 }
 
 export const SettingsModal = ({
   isOpen,
   onClose,
   setImageSeed,
+  blur,
   setBlur,
   fetchNewGreeting,
   greetingName,
   setGreetingName,
   showGreeting,
-  setShowGreeting
+  setShowGreeting,
+  bgSource,
+  setBgSource
 }: SettingsModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
   const { fetchQuote } = useQuote()
@@ -37,12 +43,15 @@ export const SettingsModal = ({
     }
   }
 
-  const [blurLevel, setBlurLevel] = useState(5)
-
   const handleBlurChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newBlur = parseInt(event.target.value, 10)
-    setBlurLevel(newBlur)
     setBlur(newBlur)
+  }
+
+  const handleBgSourceChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setBgSource(event.target.value)
   }
 
   if (!isOpen) return null
@@ -60,6 +69,23 @@ export const SettingsModal = ({
           Background
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="background-source"
+              className="text-sm text-gray-300"
+            >
+              Background Source:
+            </label>
+            <select
+              id="background-source"
+              value={bgSource}
+              onChange={(e) => handleBgSourceChange(e)}
+              className="ml-2 rounded bg-gray-800 p-2 text-white"
+            >
+              <option value="picsum">Picsum</option>
+              <option value="unsplash">Unsplash</option>
+            </select>
+          </div>
           <RefreshBgButton setImageSeed={setImageSeed} />
           <hr className="border-gray-700" />
           <div className="flex items-center gap-4">
@@ -71,7 +97,7 @@ export const SettingsModal = ({
               type="range"
               min="1"
               max="10"
-              value={blurLevel}
+              value={blur}
               onChange={handleBlurChange}
               className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
             />

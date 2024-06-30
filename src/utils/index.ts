@@ -54,3 +54,27 @@ export function getGreeting(date: Date): string {
     return 'Good evening'
   }
 }
+
+export async function getUnsplashImageUrl(
+  collectionId: string
+): Promise<string> {
+  const url = `https://api.unsplash.com/photos/random?client_id=${
+    import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+  }&collections=${collectionId}&orientation=landscape`
+
+  try {
+    const response = await fetch(url)
+    const photo = await response.json()
+    return photo.urls ? photo.urls.regular : ''
+  } catch (error) {
+    console.error('Failed to fetch random image from Unsplash:', error)
+    return ''
+  }
+}
+
+export function determineCollectionId(): string {
+  const hour = new Date().getHours()
+  const dayCollectionId = '4933370'
+  const nightCollectionId = 'VI5sx2SDQUg'
+  return hour >= 6 && hour < 18 ? dayCollectionId : nightCollectionId
+}
