@@ -120,6 +120,7 @@ export const SettingsModal = ({
               <option value="custom">Custom</option>
             </select>
           </div>
+          <hr className="border-gray-700" />
           {bgSource === 'custom' && (
             <div className="flex flex-col">
               <label
@@ -160,6 +161,7 @@ export const SettingsModal = ({
                   className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
                 />
               </div>
+              <hr className="border-gray-700" />
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="brightness-slider"
@@ -215,7 +217,7 @@ export const SettingsModal = ({
         <h2 className="ml-3 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Quote
         </h2>
-        <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+        <div className="space-y-2 rounded-lg bg-gray-800 p-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-300">
               Show Quote

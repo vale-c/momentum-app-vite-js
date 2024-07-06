@@ -10,7 +10,7 @@ export const RefreshBgButton = ({ setImageSeed }: RefreshBgButtonProps) => {
   return (
     <button
       onClick={refreshImageSeed}
-      className="mt-2 rounded bg-gray-700 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+      className="rounded-lg px-4 py-1 text-white transition-colors hover:bg-blue-600"
     >
       ️🔁
     </button>
