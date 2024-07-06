@@ -16,6 +16,7 @@ const App = () => {
     imageUrl: fallbackImage,
     coolName: localStorage.getItem('greetingName') || coolNames[0],
     blur: parseInt(localStorage.getItem('blur') || '5'),
+    brightness: '100%',
     showGreeting: true,
     greeting: getGreeting(getCurrentDate()),
     isSettingsOpen: false
@@ -75,6 +76,7 @@ const App = () => {
     fetchBackgroundImage()
   }, [
     state.blur,
+    state.brightness,
     state.bgSource,
     state.customImageUrl,
     state.imageSeed,
@@ -97,6 +99,7 @@ const App = () => {
     localStorage.setItem('bgSource', state.bgSource)
     localStorage.setItem('imageSeed', state.imageSeed)
     localStorage.setItem('blur', state.blur.toString())
+    localStorage.setItem('brightness', state.brightness)
     localStorage.setItem('customImageUrl', state.customImageUrl)
   }, [state])
 
@@ -115,8 +118,11 @@ const App = () => {
 
   return (
     <div
-      className="h-screen w-full bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${state.imageUrl})` }}
+      className="h-screen w-full bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out"
+      style={{
+        backgroundImage: `url(${state.imageUrl})`,
+        filter: `brightness(${state.brightness}%)`
+      }}
     >
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
@@ -141,6 +147,10 @@ const App = () => {
             blur={state.blur}
             setBlur={(blur) =>
               setState((prevState) => ({ ...prevState, blur }))
+            }
+            brightness={state.brightness}
+            setBrightness={(brightness) =>
+              setState((prevState) => ({ ...prevState, brightness }))
             }
             fetchNewGreeting={getCoolName}
             greetingName={state.coolName}

@@ -12,6 +12,8 @@ type SettingsModalProps = {
   setImageSeed: (seed: string) => void
   blur: number
   setBlur: (blur: number) => void
+  brightness: string
+  setBrightness: (brightness: string) => void
   fetchNewGreeting: () => void
   greetingName: string
   setGreetingName: (name: string) => void
@@ -28,6 +30,8 @@ export const SettingsModal = ({
   setImageSeed,
   blur,
   setBlur,
+  brightness,
+  setBrightness,
   fetchNewGreeting,
   greetingName,
   setGreetingName,
@@ -49,6 +53,13 @@ export const SettingsModal = ({
   const handleBlurChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newBlur = parseInt(event.target.value, 10)
     setBlur(newBlur)
+  }
+
+  const handleBrightnessChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newBrightness = event.target.value
+    setBrightness(newBrightness)
   }
 
   const handleBgSourceChange = (
@@ -97,7 +108,7 @@ export const SettingsModal = ({
               id="background-source"
               value={bgSource}
               onChange={(e) => handleBgSourceChange(e)}
-              className="ml-2 rounded bg-gray-800 text-white"
+              className="cursor-pointer rounded bg-gray-700 px-2 py-1 text-white"
             >
               <option value="picsum">Picsum</option>
               <option value="custom">Custom</option>
@@ -137,6 +148,21 @@ export const SettingsModal = ({
                   max="10"
                   value={blur}
                   onChange={handleBlurChange}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
+                />
+              </div>
+              <div className="flex items-center gap-4">
+                <label htmlFor="blur-slider" className="mb-2 block text-sm">
+                  Brightness
+                </label>
+                <input
+                  id="brightness-slider"
+                  type="range"
+                  min="50"
+                  max="200"
+                  step="10"
+                  value={brightness}
+                  onChange={handleBrightnessChange}
                   className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-300 dark:bg-gray-700"
                 />
               </div>
