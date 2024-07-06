@@ -7,6 +7,12 @@ import { Weather } from './Weather'
 import fallbackImage from '../assets/sf-bg.avif'
 import { coolNames, getGreeting, getCurrentDate } from '../utils'
 
+type Settings = {
+  showGreeting: boolean
+  showQuote: boolean
+  showWeather: boolean
+}
+
 const App = () => {
   const [state, setState] = useState({
     dimensions: { width: window.innerWidth, height: window.innerHeight },
@@ -16,10 +22,14 @@ const App = () => {
     imageUrl: fallbackImage,
     coolName: localStorage.getItem('greetingName') || coolNames[0],
     blur: parseInt(localStorage.getItem('blur') || '5'),
-    brightness: '100%',
-    showGreeting: true,
+    brightness: localStorage.getItem('brightness') || '100%',
     greeting: getGreeting(getCurrentDate()),
-    isSettingsOpen: false
+    isSettingsOpen: false,
+    settings: {
+      showGreeting: JSON.parse(localStorage.getItem('showGreeting') || 'true'),
+      showQuote: JSON.parse(localStorage.getItem('showQuote') || 'true'),
+      showWeather: JSON.parse(localStorage.getItem('showWeather') || 'true')
+    } as Settings
   })
 
   const getCoolName = () => {
@@ -34,6 +44,16 @@ const App = () => {
     if (newGreeting !== state.greeting) {
       setState((prevState) => ({ ...prevState, greeting: newGreeting }))
     }
+  }
+
+  const toggleSetting = (settingName: keyof Settings) => {
+    setState((prevState) => ({
+      ...prevState,
+      settings: {
+        ...prevState.settings,
+        [settingName]: !prevState.settings[settingName]
+      }
+    }))
   }
 
   useEffect(() => {
@@ -101,6 +121,15 @@ const App = () => {
     localStorage.setItem('blur', state.blur.toString())
     localStorage.setItem('brightness', state.brightness)
     localStorage.setItem('customImageUrl', state.customImageUrl)
+    localStorage.setItem(
+      'showGreeting',
+      JSON.stringify(state.settings.showGreeting)
+    )
+    localStorage.setItem('showQuote', JSON.stringify(state.settings.showQuote))
+    localStorage.setItem(
+      'showWeather',
+      JSON.stringify(state.settings.showWeather)
+    )
   }, [state])
 
   useEffect(() => {
@@ -128,13 +157,13 @@ const App = () => {
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <Time />
-          {state.showGreeting && (
+          {state.settings.showGreeting && (
             <h2 className="mx-8 mt-8 text-center text-3xl font-normal capitalize text-white drop-shadow-xl sm:mx-8">
               {state.greeting}, {state.coolName}
             </h2>
           )}
-          <Quote />
-          <Weather />
+          {state.settings.showQuote && <Quote />}
+          {state.settings.showWeather && <Weather />}
           <Settings
             onToggle={toggleSettings}
             isModalOpen={state.isSettingsOpen}
@@ -158,10 +187,8 @@ const App = () => {
             setGreetingName={(name) =>
               setState((prevState) => ({ ...prevState, coolName: name }))
             }
-            showGreeting={state.showGreeting}
-            setShowGreeting={(show) =>
-              setState((prevState) => ({ ...prevState, showGreeting: show }))
-            }
+            settings={state.settings}
+            toggleSetting={toggleSetting}
             bgSource={state.bgSource}
             setBgSource={(source) =>
               setState((prevState) => ({ ...prevState, bgSource: source }))

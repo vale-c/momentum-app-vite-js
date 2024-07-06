@@ -6,6 +6,12 @@ import { RefreshGreetingButton } from '../RefreshGreetingButton'
 import { ToggleComponent } from 'components/Ui/Toggle'
 import { resizeImage } from '../../../utils'
 
+type Settings = {
+  showGreeting: boolean
+  showQuote: boolean
+  showWeather: boolean
+}
+
 type SettingsModalProps = {
   isOpen: boolean
   onClose: () => void
@@ -17,8 +23,8 @@ type SettingsModalProps = {
   fetchNewGreeting: () => void
   greetingName: string
   setGreetingName: (name: string) => void
-  showGreeting: boolean
-  setShowGreeting: (show: boolean) => void
+  settings: Settings
+  toggleSetting: (settingName: keyof Settings) => void
   bgSource: string
   setBgSource: (source: string) => void
   setCustomImageUrl: (url: string) => void
@@ -35,8 +41,8 @@ export const SettingsModal = ({
   fetchNewGreeting,
   greetingName,
   setGreetingName,
-  showGreeting,
-  setShowGreeting,
+  settings,
+  toggleSetting,
   bgSource,
   setBgSource,
   setCustomImageUrl
@@ -181,8 +187,8 @@ export const SettingsModal = ({
               Show Greeting
             </span>
             <ToggleComponent
-              isActive={showGreeting}
-              setIsActive={setShowGreeting}
+              isActive={settings.showGreeting}
+              setIsActive={() => toggleSetting('showGreeting')}
             />
           </div>
           <hr className="border-gray-700" />
@@ -207,7 +213,31 @@ export const SettingsModal = ({
           Quote
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-300">
+              Show Quote
+            </span>
+            <ToggleComponent
+              isActive={settings.showQuote}
+              setIsActive={() => toggleSetting('showQuote')}
+            />
+          </div>
+          <hr className="border-gray-700" />
           <RefreshQuoteButton fetchNewQuote={() => fetchQuote(true)} />
+        </div>
+        <h2 className="ml-4 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+          Weather
+        </h2>
+        <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-300">
+              Show Weather
+            </span>
+            <ToggleComponent
+              isActive={settings.showWeather}
+              setIsActive={() => toggleSetting('showWeather')}
+            />
+          </div>
         </div>
       </div>
     </div>
