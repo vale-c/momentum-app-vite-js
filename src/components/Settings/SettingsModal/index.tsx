@@ -152,7 +152,10 @@ export const SettingsModal = ({
                 />
               </div>
               <div className="flex items-center gap-4">
-                <label htmlFor="blur-slider" className="mb-2 block text-sm">
+                <label
+                  htmlFor="brightness-slider"
+                  className="mb-2 block text-sm"
+                >
                   Brightness
                 </label>
                 <input

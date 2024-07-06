@@ -106,6 +106,7 @@ const App = () => {
   useEffect(() => {
     const timer = setInterval(() => updateGreeting(), 3600000) // Every hour
     return () => clearInterval(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.greeting])
 
   const closeSettings = () =>
