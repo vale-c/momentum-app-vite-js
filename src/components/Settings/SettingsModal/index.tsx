@@ -138,7 +138,10 @@ export const SettingsModal = ({
             </div>
           )}
           {bgSource === 'picsum' && (
-            <RefreshBgButton setImageSeed={setImageSeed} />
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-300">Refresh Image:</span>
+              <RefreshBgButton setImageSeed={setImageSeed} />
+            </div>
           )}
           {bgSource === 'picsum' && (
             <>

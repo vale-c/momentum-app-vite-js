@@ -22,7 +22,7 @@ const App = () => {
     imageUrl: fallbackImage,
     coolName: localStorage.getItem('greetingName') || coolNames[0],
     blur: parseInt(localStorage.getItem('blur') || '5'),
-    brightness: localStorage.getItem('brightness') || '100%',
+    brightness: '100%',
     greeting: getGreeting(getCurrentDate()),
     isSettingsOpen: false,
     settings: {
@@ -47,12 +47,24 @@ const App = () => {
   }
 
   const toggleSetting = (settingName: keyof Settings) => {
+    setState((prevState) => {
+      const newValue = !prevState.settings[settingName]
+      localStorage.setItem(settingName, JSON.stringify(newValue))
+      return {
+        ...prevState,
+        settings: {
+          ...prevState.settings,
+          [settingName]: newValue
+        }
+      }
+    })
+  }
+
+  const updateImageSeed = (newSeed: string) => {
+    localStorage.setItem('imageSeed', newSeed)
     setState((prevState) => ({
       ...prevState,
-      settings: {
-        ...prevState.settings,
-        [settingName]: !prevState.settings[settingName]
-      }
+      imageSeed: newSeed
     }))
   }
 
@@ -171,9 +183,7 @@ const App = () => {
           <SettingsModal
             isOpen={state.isSettingsOpen}
             onClose={closeSettings}
-            setImageSeed={(seed) =>
-              setState((prevState) => ({ ...prevState, imageSeed: seed }))
-            }
+            setImageSeed={updateImageSeed}
             blur={state.blur}
             setBlur={(blur) =>
               setState((prevState) => ({ ...prevState, blur }))
