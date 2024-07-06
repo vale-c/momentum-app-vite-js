@@ -69,29 +69,12 @@ const App = () => {
   }
 
   useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      const windowAspectRatio = width / height
-      const imageAspectRatio = 16 / 9
-      const newDimensions =
-        windowAspectRatio > imageAspectRatio
-          ? { width, height: Math.round(width / imageAspectRatio) }
-          : { width: Math.round(height * imageAspectRatio), height }
-      setState((prevState) => ({ ...prevState, dimensions: newDimensions }))
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
     const fetchBackgroundImage = () => {
       switch (state.bgSource) {
         case 'picsum':
           setState((prevState) => ({
             ...prevState,
-            imageUrl: `https://picsum.photos/seed/${state.imageSeed}/${state.dimensions.width}/${state.dimensions.height}?blur=${state.blur}`
+            imageUrl: `https://picsum.photos/seed/${state.imageSeed}/1920/1280?blur=${state.blur}`
           }))
           break
         case 'custom':
