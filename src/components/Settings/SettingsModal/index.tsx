@@ -99,7 +99,7 @@ export const SettingsModal = ({
         ref={modalRef}
         className="h-full w-96 overflow-y-auto bg-gray-900 p-4 text-white"
       >
-        <h2 className="mb-4 border-gray-700 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="mb-2 ml-3 border-gray-700 text-sm font-medium uppercase tracking-widest text-gray-400">
           Background
         </h2>
         <div className="space-y-2 rounded-lg bg-gray-800 p-4">
@@ -181,7 +181,7 @@ export const SettingsModal = ({
             </>
           )}
         </div>
-        <h2 className="ml-4 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="ml-3 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Greeting
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
@@ -212,7 +212,7 @@ export const SettingsModal = ({
             <RefreshGreetingButton fetchNewGreeting={fetchNewGreeting} />
           </div>
         </div>
-        <h2 className="ml-4 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="ml-3 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Quote
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">
@@ -228,7 +228,7 @@ export const SettingsModal = ({
           <hr className="border-gray-700" />
           <RefreshQuoteButton fetchNewQuote={() => fetchQuote(true)} />
         </div>
-        <h2 className="ml-4 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+        <h2 className="ml-3 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Weather
         </h2>
         <div className="space-y-4 rounded-lg bg-gray-800 p-3">

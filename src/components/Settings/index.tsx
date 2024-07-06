@@ -6,7 +6,6 @@ export const Settings = ({
   isModalOpen: boolean
 }) => {
   const bgClass = isModalOpen ? 'bg-gray-700 rounded-lg' : ''
-
   return (
     <div className={`absolute bottom-4 right-4 z-10 p-2 ${bgClass}`}>
       <img
