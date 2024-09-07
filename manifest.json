@@ -24,9 +24,12 @@
     "128": "icon128.png"
   },
   "permissions": ["activeTab", "storage", "scripting"],
-  "host_permissions": ["https://en.wikipedia.org/"],
+  "host_permissions": [
+    "https://en.wikipedia.org/",
+    "https://api.open-meteo.com/"
+  ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://en.wikipedia.org/"
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://en.wikipedia.org/ https://api.open-meteo.com/ https://stoic-quotes.com/api/quote"
   },
   "web_accessible_resources": [
     {
