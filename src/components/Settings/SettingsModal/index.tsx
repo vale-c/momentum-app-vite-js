@@ -18,7 +18,7 @@ type SettingsModalProps = {
   setImageSeed: (seed: string) => void
   blur: number
   setBlur: (blur: number) => void
-  brightness: string
+  brightness: number
   setBrightness: (brightness: number) => void
   fetchNewGreeting: () => void
   greetingName: string

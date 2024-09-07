@@ -22,7 +22,7 @@ const App = () => {
     imageUrl: fallbackImage,
     coolName: localStorage.getItem('greetingName') || coolNames[0],
     blur: parseInt(localStorage.getItem('blur') || '5'),
-    brightness: '100%',
+    brightness: parseInt(localStorage.getItem('brightness') || '100'),
     greeting: getGreeting(getCurrentDate()),
     isSettingsOpen: false,
     settings: {
@@ -114,7 +114,7 @@ const App = () => {
     localStorage.setItem('bgSource', state.bgSource)
     localStorage.setItem('imageSeed', state.imageSeed)
     localStorage.setItem('blur', state.blur.toString())
-    localStorage.setItem('brightness', state.brightness)
+    localStorage.setItem('brightness', state.brightness.toString())
     localStorage.setItem('customImageUrl', state.customImageUrl)
     localStorage.setItem(
       'showGreeting',
