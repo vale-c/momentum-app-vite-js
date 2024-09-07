@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Quote } from './Quote'
 import { Time } from './Time'
+import { Search } from './Search'
 import { Settings } from './Settings'
 import { SettingsModal } from './Settings/SettingsModal'
 import { Weather } from './Weather'
@@ -11,10 +12,26 @@ type Settings = {
   showGreeting: boolean
   showQuote: boolean
   showWeather: boolean
+  showSearch: boolean
+}
+
+type AppState = {
+  dimensions: { width: number; height: number }
+  imageSeed: string
+  bgSource: string
+  customImageUrl: string
+  imageUrl: string
+  coolName: string
+  blur: number
+  brightness: number
+  greeting: string
+  isSettingsOpen: boolean
+  settings: Settings
+  searchQuery: string
 }
 
 const App = () => {
-  const [state, setState] = useState({
+  const [state, setState] = useState<AppState>({
     dimensions: { width: window.innerWidth, height: window.innerHeight },
     imageSeed: localStorage.getItem('imageSeed') || Math.random().toString(),
     bgSource: localStorage.getItem('bgSource') || 'picsum',
@@ -28,8 +45,10 @@ const App = () => {
     settings: {
       showGreeting: JSON.parse(localStorage.getItem('showGreeting') || 'true'),
       showQuote: JSON.parse(localStorage.getItem('showQuote') || 'true'),
-      showWeather: JSON.parse(localStorage.getItem('showWeather') || 'true')
-    } as Settings
+      showWeather: JSON.parse(localStorage.getItem('showWeather') || 'true'),
+      showSearch: JSON.parse(localStorage.getItem('showSearch') || 'false') // New setting
+    },
+    searchQuery: ''
   })
 
   const getCoolName = () => {
@@ -66,6 +85,10 @@ const App = () => {
       ...prevState,
       imageSeed: newSeed
     }))
+  }
+
+  const handleSearch = (query: string) => {
+    setState((prevState) => ({ ...prevState, searchQuery: query }))
   }
 
   useEffect(() => {
@@ -125,6 +148,10 @@ const App = () => {
       'showWeather',
       JSON.stringify(state.settings.showWeather)
     )
+    localStorage.setItem(
+      'showSearch',
+      JSON.stringify(state.settings.showSearch)
+    )
   }, [state])
 
   useEffect(() => {
@@ -160,6 +187,7 @@ const App = () => {
           )}
           {state.settings.showQuote && <Quote />}
           {state.settings.showWeather && <Weather />}
+          {state.settings.showSearch && <Search onSearch={handleSearch} />}
           <Settings
             onToggle={toggleSettings}
             isModalOpen={state.isSettingsOpen}

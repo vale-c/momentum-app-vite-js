@@ -10,6 +10,7 @@ type Settings = {
   showGreeting: boolean
   showQuote: boolean
   showWeather: boolean
+  showSearch: boolean
 }
 
 type SettingsModalProps = {
@@ -241,6 +242,20 @@ export const SettingsModal = ({
             <ToggleComponent
               isActive={settings.showWeather}
               setIsActive={() => toggleSetting('showWeather')}
+            />
+          </div>
+        </div>
+        <h2 className="ml-3 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
+          Search
+        </h2>
+        <div className="space-y-4 rounded-lg bg-gray-800 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-300">
+              Show Search
+            </span>
+            <ToggleComponent
+              isActive={settings.showSearch}
+              setIsActive={() => toggleSetting('showSearch')}
             />
           </div>
         </div>
