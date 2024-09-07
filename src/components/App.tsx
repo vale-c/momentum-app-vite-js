@@ -142,14 +142,15 @@ const App = () => {
     }))
 
   return (
-    <div
-      className="h-screen w-full bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out"
-      style={{
-        backgroundImage: `url(${state.imageUrl})`,
-        filter: `brightness(${state.brightness}%)`
-      }}
-    >
-      <div className="flex h-full items-center justify-center">
+    <div className="relative h-screen w-full overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out"
+        style={{
+          backgroundImage: `url(${state.imageUrl})`,
+          filter: `brightness(${state.brightness}%)`
+        }}
+      />
+      <div className="relative z-10 flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <Time />
           {state.settings.showGreeting && (
@@ -163,35 +164,33 @@ const App = () => {
             onToggle={toggleSettings}
             isModalOpen={state.isSettingsOpen}
           />
-          <SettingsModal
-            isOpen={state.isSettingsOpen}
-            onClose={closeSettings}
-            setImageSeed={updateImageSeed}
-            blur={state.blur}
-            setBlur={(blur) =>
-              setState((prevState) => ({ ...prevState, blur }))
-            }
-            brightness={state.brightness}
-            setBrightness={(brightness) =>
-              setState((prevState) => ({ ...prevState, brightness }))
-            }
-            fetchNewGreeting={getCoolName}
-            greetingName={state.coolName}
-            setGreetingName={(name) =>
-              setState((prevState) => ({ ...prevState, coolName: name }))
-            }
-            settings={state.settings}
-            toggleSetting={toggleSetting}
-            bgSource={state.bgSource}
-            setBgSource={(source) =>
-              setState((prevState) => ({ ...prevState, bgSource: source }))
-            }
-            setCustomImageUrl={(url) =>
-              setState((prevState) => ({ ...prevState, customImageUrl: url }))
-            }
-          />
         </div>
       </div>
+      <SettingsModal
+        isOpen={state.isSettingsOpen}
+        onClose={closeSettings}
+        setImageSeed={updateImageSeed}
+        blur={state.blur}
+        setBlur={(blur) => setState((prevState) => ({ ...prevState, blur }))}
+        brightness={state.brightness}
+        setBrightness={(brightness) =>
+          setState((prevState) => ({ ...prevState, brightness }))
+        }
+        fetchNewGreeting={getCoolName}
+        greetingName={state.coolName}
+        setGreetingName={(name) =>
+          setState((prevState) => ({ ...prevState, coolName: name }))
+        }
+        settings={state.settings}
+        toggleSetting={toggleSetting}
+        bgSource={state.bgSource}
+        setBgSource={(source) =>
+          setState((prevState) => ({ ...prevState, bgSource: source }))
+        }
+        setCustomImageUrl={(url) =>
+          setState((prevState) => ({ ...prevState, customImageUrl: url }))
+        }
+      />
     </div>
   )
 }

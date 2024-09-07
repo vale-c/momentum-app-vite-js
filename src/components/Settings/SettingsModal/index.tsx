@@ -19,7 +19,7 @@ type SettingsModalProps = {
   blur: number
   setBlur: (blur: number) => void
   brightness: string
-  setBrightness: (brightness: string) => void
+  setBrightness: (brightness: number) => void
   fetchNewGreeting: () => void
   greetingName: string
   setGreetingName: (name: string) => void
@@ -64,7 +64,7 @@ export const SettingsModal = ({
   const handleBrightnessChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const newBrightness = event.target.value
+    const newBrightness = parseInt(event.target.value, 10)
     setBrightness(newBrightness)
   }
 
@@ -92,7 +92,7 @@ export const SettingsModal = ({
 
   return (
     <div
-      className="fixed inset-0 flex justify-end bg-black/20"
+      className="fixed inset-0 z-50 flex justify-end bg-black/20"
       onClick={handleCloseClick}
     >
       <div
@@ -173,7 +173,7 @@ export const SettingsModal = ({
                   id="brightness-slider"
                   type="range"
                   min="50"
-                  max="200"
+                  max="150"
                   step="10"
                   value={brightness}
                   onChange={handleBrightnessChange}
