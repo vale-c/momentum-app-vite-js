@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from 'react'
 import { FaSearch } from 'react-icons/fa'
 
-type SearchProps = {
-  onSearch: (query: string) => void
+type SearchEngine = {
+  name: string
+  url: string
 }
 
-export const Search: React.FC<SearchProps> = ({ onSearch }) => {
+type SearchProps = {
+  onSearch: (query: string) => void
+  selectedEngine: SearchEngine
+}
+
+export const Search: React.FC<SearchProps> = ({ onSearch, selectedEngine }) => {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -56,10 +62,7 @@ export const Search: React.FC<SearchProps> = ({ onSearch }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (query) {
-      window.open(
-        `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-        '_blank'
-      )
+      window.open(`${selectedEngine.url}${encodeURIComponent(query)}`, '_blank')
       onSearch(query)
       setShowSuggestions(false)
     }
@@ -69,7 +72,7 @@ export const Search: React.FC<SearchProps> = ({ onSearch }) => {
     setQuery(suggestion)
     setShowSuggestions(false)
     window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(suggestion)}`,
+      `${selectedEngine.url}${encodeURIComponent(suggestion)}`,
       '_blank'
     )
     onSearch(suggestion)
@@ -100,7 +103,7 @@ export const Search: React.FC<SearchProps> = ({ onSearch }) => {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search..."
+          placeholder={`Search with ${selectedEngine.name}...`}
           className="w-full rounded-lg bg-white/10 px-4 py-3 pr-12 text-white backdrop-blur-md transition-all duration-300 ease-in-out placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
         <button

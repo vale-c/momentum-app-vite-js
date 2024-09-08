@@ -28,7 +28,20 @@ type AppState = {
   isSettingsOpen: boolean
   settings: Settings
   searchQuery: string
+  selectedEngine: SearchEngine
 }
+
+type SearchEngine = {
+  name: string
+  url: string
+}
+
+const searchEngines: SearchEngine[] = [
+  { name: 'Google', url: 'https://www.google.com/search?q=' },
+  { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+  { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+  { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' }
+]
 
 const App = () => {
   const [state, setState] = useState<AppState>({
@@ -48,7 +61,8 @@ const App = () => {
       showWeather: JSON.parse(localStorage.getItem('showWeather') || 'true'),
       showSearch: JSON.parse(localStorage.getItem('showSearch') || 'false') // New setting
     },
-    searchQuery: ''
+    searchQuery: '',
+    selectedEngine: searchEngines[0]
   })
 
   const getCoolName = () => {
@@ -89,6 +103,10 @@ const App = () => {
 
   const handleSearch = (query: string) => {
     setState((prevState) => ({ ...prevState, searchQuery: query }))
+  }
+
+  const setSelectedEngine = (engine: SearchEngine) => {
+    setState((prevState) => ({ ...prevState, selectedEngine: engine }))
   }
 
   useEffect(() => {
@@ -187,13 +205,21 @@ const App = () => {
           )}
           {state.settings.showQuote && <Quote />}
           {state.settings.showWeather && <Weather />}
-          {state.settings.showSearch && <Search onSearch={handleSearch} />}
+          {state.settings.showSearch && (
+            <Search
+              onSearch={handleSearch}
+              selectedEngine={state.selectedEngine}
+            />
+          )}
           <Settings
             onToggle={toggleSettings}
             isModalOpen={state.isSettingsOpen}
           />
         </div>
       </div>
+      {state.settings.showSearch && (
+        <Search onSearch={handleSearch} selectedEngine={state.selectedEngine} />
+      )}
       <SettingsModal
         isOpen={state.isSettingsOpen}
         onClose={closeSettings}
@@ -218,6 +244,8 @@ const App = () => {
         setCustomImageUrl={(url) =>
           setState((prevState) => ({ ...prevState, customImageUrl: url }))
         }
+        selectedEngine={state.selectedEngine}
+        setSelectedEngine={setSelectedEngine}
       />
     </div>
   )

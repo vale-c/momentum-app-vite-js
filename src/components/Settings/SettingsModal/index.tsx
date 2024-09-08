@@ -6,6 +6,18 @@ import { RefreshGreetingButton } from '../RefreshGreetingButton'
 import { ToggleComponent } from 'components/Ui/Toggle'
 import { resizeImage } from '../../../utils'
 
+type SearchEngine = {
+  name: string
+  url: string
+}
+
+const searchEngines: SearchEngine[] = [
+  { name: 'Google', url: 'https://www.google.com/search?q=' },
+  { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+  { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+  { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' }
+]
+
 type Settings = {
   showGreeting: boolean
   showQuote: boolean
@@ -29,6 +41,8 @@ type SettingsModalProps = {
   bgSource: string
   setBgSource: (source: string) => void
   setCustomImageUrl: (url: string) => void
+  selectedEngine: SearchEngine
+  setSelectedEngine: (engine: SearchEngine) => void
 }
 
 export const SettingsModal = ({
@@ -46,7 +60,9 @@ export const SettingsModal = ({
   toggleSetting,
   bgSource,
   setBgSource,
-  setCustomImageUrl
+  setCustomImageUrl,
+  selectedEngine,
+  setSelectedEngine
 }: SettingsModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
   const { fetchQuote } = useQuote()
@@ -115,7 +131,7 @@ export const SettingsModal = ({
               id="background-source"
               value={bgSource}
               onChange={(e) => handleBgSourceChange(e)}
-              className="cursor-pointer rounded bg-gray-700 px-2 py-1 text-white"
+              className="cursor-pointer rounded bg-gray-700 p-2 text-white"
             >
               <option value="picsum">Picsum</option>
               <option value="custom">Custom</option>
@@ -257,6 +273,36 @@ export const SettingsModal = ({
               isActive={settings.showSearch}
               setIsActive={() => toggleSetting('showSearch')}
             />
+          </div>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="search-engine"
+              className="text-sm font-medium text-gray-300"
+            >
+              Search Engine
+            </label>
+            <select
+              id="search-engine"
+              value={selectedEngine.name}
+              onChange={(e) =>
+                setSelectedEngine(
+                  searchEngines.find(
+                    (engine) => engine.name === e.target.value
+                  ) || searchEngines[0]
+                )
+              }
+              className="rounded-lg bg-gray-700 p-2 text-white"
+            >
+              {searchEngines.map((engine) => (
+                <option
+                  key={engine.name}
+                  value={engine.name}
+                  className="bg-gray-700"
+                >
+                  {engine.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
