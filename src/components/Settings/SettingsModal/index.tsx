@@ -6,24 +6,26 @@ import { RefreshGreetingButton } from '../RefreshGreetingButton'
 import { ToggleComponent } from 'components/Ui/Toggle'
 import { resizeImage } from '../../../utils'
 
-type SearchEngine = {
-  name: string
-  url: string
-}
-
-const searchEngines: SearchEngine[] = [
-  { name: 'Google', url: 'https://www.google.com/search?q=' },
-  { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-  { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
-  { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' }
-]
-
-type Settings = {
+export type Settings = {
   showGreeting: boolean
   showQuote: boolean
   showWeather: boolean
   showSearch: boolean
 }
+
+export type BgSource = 'picsum' | 'custom'
+
+export type SearchEngine = {
+  name: string
+  url: string
+}
+
+export const searchEngines: SearchEngine[] = [
+  { name: 'Google', url: 'https://www.google.com/search?q=' },
+  { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+  { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+  { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' }
+]
 
 type SettingsModalProps = {
   isOpen: boolean
@@ -38,11 +40,11 @@ type SettingsModalProps = {
   setGreetingName: (name: string) => void
   settings: Settings
   toggleSetting: (settingName: keyof Settings) => void
-  bgSource: string
-  setBgSource: (source: string) => void
   setCustomImageUrl: (url: string) => void
   selectedEngine: SearchEngine
   setSelectedEngine: (engine: SearchEngine) => void
+  bgSource: BgSource
+  setBgSource: (source: BgSource) => void
 }
 
 export const SettingsModal = ({
@@ -88,7 +90,7 @@ export const SettingsModal = ({
   const handleBgSourceChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setBgSource(event.target.value)
+    setBgSource(event.target.value as BgSource)
   }
 
   const handleFileUpload = async (

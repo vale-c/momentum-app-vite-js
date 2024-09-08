@@ -7,18 +7,17 @@ import { SettingsModal } from './Settings/SettingsModal'
 import { Weather } from './Weather'
 import fallbackImage from '../assets/sf-bg.avif'
 import { coolNames, getGreeting, getCurrentDate } from '../utils'
-
-type Settings = {
-  showGreeting: boolean
-  showQuote: boolean
-  showWeather: boolean
-  showSearch: boolean
-}
+import { searchEngines } from './Settings/SettingsModal'
+import type {
+  BgSource,
+  Settings as SettingsType,
+  SearchEngine
+} from './Settings/SettingsModal'
 
 type AppState = {
   dimensions: { width: number; height: number }
   imageSeed: string
-  bgSource: string
+  bgSource: BgSource
   customImageUrl: string
   imageUrl: string
   coolName: string
@@ -26,28 +25,16 @@ type AppState = {
   brightness: number
   greeting: string
   isSettingsOpen: boolean
-  settings: Settings
+  settings: SettingsType
   searchQuery: string
   selectedEngine: SearchEngine
 }
-
-type SearchEngine = {
-  name: string
-  url: string
-}
-
-const searchEngines: SearchEngine[] = [
-  { name: 'Google', url: 'https://www.google.com/search?q=' },
-  { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-  { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
-  { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' }
-]
 
 const App = () => {
   const [state, setState] = useState<AppState>({
     dimensions: { width: window.innerWidth, height: window.innerHeight },
     imageSeed: localStorage.getItem('imageSeed') || Math.random().toString(),
-    bgSource: localStorage.getItem('bgSource') || 'picsum',
+    bgSource: (localStorage.getItem('bgSource') as BgSource) || 'picsum',
     customImageUrl: localStorage.getItem('customImageUrl') || '',
     imageUrl: fallbackImage,
     coolName: localStorage.getItem('greetingName') || coolNames[0],
@@ -79,7 +66,7 @@ const App = () => {
     }
   }
 
-  const toggleSetting = (settingName: keyof Settings) => {
+  const toggleSetting = (settingName: keyof SettingsType) => {
     setState((prevState) => {
       const newValue = !prevState.settings[settingName]
       localStorage.setItem(settingName, JSON.stringify(newValue))
