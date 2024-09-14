@@ -1,10 +1,7 @@
 import { useRef } from 'react'
-import { RefreshBgButton } from '../RefreshBgButton'
-import { RefreshQuoteButton } from '../RefreshQuoteButton'
-import { useQuote } from '../../Quote/context'
-import { RefreshGreetingButton } from '../RefreshGreetingButton'
 import { ToggleComponent } from 'components/Ui/Toggle'
 import { resizeImage } from '../../../utils'
+import { FaSync } from 'react-icons/fa'
 
 export type Settings = {
   showGreeting: boolean
@@ -27,15 +24,15 @@ export const searchEngines: SearchEngine[] = [
   { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' }
 ]
 
+export type Frequency = 'everyTab' | 'everyHour' | 'everyDay' | 'pause'
+
 type SettingsModalProps = {
   isOpen: boolean
   onClose: () => void
-  setImageSeed: (seed: string) => void
   blur: number
   setBlur: (blur: number) => void
   brightness: number
   setBrightness: (brightness: number) => void
-  fetchNewGreeting: () => void
   greetingName: string
   setGreetingName: (name: string) => void
   settings: Settings
@@ -44,8 +41,42 @@ type SettingsModalProps = {
   selectedEngine: SearchEngine
   setSelectedEngine: (engine: SearchEngine) => void
   bgSource: BgSource
+  setImageSeed: () => void
   setBgSource: (source: BgSource) => void
+  bgFrequency: Frequency
+  setBgFrequency: (frequency: Frequency) => void
+  quoteFrequency: Frequency
+  setQuoteFrequency: (frequency: Frequency) => void
+  refreshQuote: () => void
 }
+
+const FrequencySelect: React.FC<{
+  value: Frequency
+  onChange: (value: Frequency) => void
+  onRefresh?: () => void
+}> = ({ value, onChange, onRefresh }) => (
+  <div className="flex items-center justify-between">
+    <label className="text-sm font-medium text-gray-300">Frequency</label>
+    <div className="flex items-center space-x-2">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as Frequency)}
+        className="grow rounded-lg bg-gray-700 px-3 py-2 text-white"
+      >
+        <option value="everyTab">Every Tab</option>
+        <option value="everyHour">Every Hour</option>
+        <option value="everyDay">Every Day</option>
+        <option value="pause">Pause</option>
+      </select>
+      <button
+        onClick={onRefresh}
+        className="rounded-full bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
+      >
+        <FaSync size={16} />
+      </button>
+    </div>
+  </div>
+)
 
 export const SettingsModal = ({
   isOpen,
@@ -55,7 +86,6 @@ export const SettingsModal = ({
   setBlur,
   brightness,
   setBrightness,
-  fetchNewGreeting,
   greetingName,
   setGreetingName,
   settings,
@@ -64,10 +94,14 @@ export const SettingsModal = ({
   setBgSource,
   setCustomImageUrl,
   selectedEngine,
-  setSelectedEngine
+  setSelectedEngine,
+  bgFrequency,
+  setBgFrequency,
+  quoteFrequency,
+  setQuoteFrequency,
+  refreshQuote
 }: SettingsModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
-  const { fetchQuote } = useQuote()
 
   const handleCloseClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -133,11 +167,21 @@ export const SettingsModal = ({
               id="background-source"
               value={bgSource}
               onChange={(e) => handleBgSourceChange(e)}
-              className="cursor-pointer rounded bg-gray-700 p-2 text-white"
+              className="cursor-pointer rounded-lg bg-gray-700 p-2 text-white"
             >
               <option value="picsum">Picsum</option>
               <option value="custom">Custom</option>
             </select>
+          </div>
+          <hr className="border-gray-700" />
+          <div className="relative">
+            <div className="items-center justify-between">
+              <FrequencySelect
+                value={bgFrequency}
+                onChange={setBgFrequency}
+                onRefresh={setImageSeed}
+              />
+            </div>
           </div>
           <hr className="border-gray-700" />
           {bgSource === 'custom' && (
@@ -158,14 +202,7 @@ export const SettingsModal = ({
             </div>
           )}
           {bgSource === 'picsum' && (
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-300">Refresh Image:</span>
-              <RefreshBgButton setImageSeed={setImageSeed} />
-            </div>
-          )}
-          {bgSource === 'picsum' && (
             <>
-              <hr className="border-gray-700" />
               <div className="flex items-center gap-4">
                 <label htmlFor="blur-slider" className="mb-2 block text-sm">
                   Blur Intensity
@@ -228,15 +265,21 @@ export const SettingsModal = ({
               className="h-8 w-full rounded-lg bg-gray-700 px-3 text-gray-300"
             />
           </div>
-          <hr className="border-gray-700" />
-          <div className="rounded-lg bg-gray-800">
-            <RefreshGreetingButton fetchNewGreeting={fetchNewGreeting} />
-          </div>
         </div>
         <h2 className="ml-3 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Quote
         </h2>
         <div className="space-y-2 rounded-lg bg-gray-800 p-3">
+          <div className="relative">
+            <div className="items-center justify-between">
+              <FrequencySelect
+                value={quoteFrequency}
+                onChange={setQuoteFrequency}
+                onRefresh={refreshQuote}
+              />
+            </div>
+          </div>
+          <hr className="border-gray-700" />
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-300">
               Show Quote
@@ -246,8 +289,6 @@ export const SettingsModal = ({
               setIsActive={() => toggleSetting('showQuote')}
             />
           </div>
-          <hr className="border-gray-700" />
-          <RefreshQuoteButton fetchNewQuote={() => fetchQuote(true)} />
         </div>
         <h2 className="ml-3 mt-4 border-gray-700 pb-2 text-sm font-medium uppercase tracking-widest text-gray-400">
           Weather

@@ -4,29 +4,6 @@ export function classNames(...classes: unknown[]): string {
   return classes.filter(Boolean).join(' ')
 }
 
-export const coolNames = [
-  'Sparkle Ninja',
-  'Neon Whisper',
-  'Cosmic Explorer',
-  'Pixel Pirate',
-  'Galactic Jester',
-  'Laser Unicorn',
-  'Quantum Dreamer',
-  'Cyber Samurai',
-  'Space Cowboy',
-  'Techno Wizard',
-  'Funky Monkey',
-  'Disco Dancer',
-  'Mystic Mermaid',
-  'Retro Rockstar',
-  'Electric Eel',
-  'Groovy Guru',
-  'Virtual Voyager',
-  'Fantasy Phoenix',
-  'Rainbow Rider',
-  'Mindful Magician'
-]
-
 export function getCurrentDate(): Date {
   return new Date()
 }
