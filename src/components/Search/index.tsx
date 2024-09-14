@@ -104,7 +104,7 @@ export const Search: React.FC<SearchProps> = ({ onSearch, selectedEngine }) => {
           onFocus={() => setShowSuggestions(true)}
           onKeyDown={handleKeyDown}
           placeholder={`Search with ${selectedEngine.name}...`}
-          className="w-full rounded-lg bg-white/10 px-4 py-3 pr-12 text-white backdrop-blur-md transition-all duration-300 ease-in-out placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="w-full rounded-lg bg-white/10 px-4 py-3 pr-12 text-white backdrop-blur-md transition-all duration-300 ease-in-out placeholder:text-white/80 focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
         <button
           type="submit"

@@ -153,13 +153,13 @@ export const Weather = () => {
     return null
   }
   if (loading) {
-    return <div className="text-center text-white">Loading...</div>
+    return <div className="text-center">Loading...</div>
   }
   if (error) {
     return <div className="text-center text-red-600">{error}</div>
   }
   return (
-    <div className="mt-8 flex flex-col items-center rounded-lg p-4 text-center text-white">
+    <div className="mt-8 flex flex-col items-center rounded-lg p-4 text-center">
       {getWeatherIcon(weather.weatherCode)}
       <h2 className="text-2xl font-bold">{weather.temperature}°C</h2>
       <p>{weather.description}</p>

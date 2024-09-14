@@ -61,7 +61,7 @@ const FrequencySelect: React.FC<{
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as Frequency)}
-        className="grow rounded-lg bg-gray-700 px-3 py-2 text-white"
+        className="grow rounded-lg bg-gray-700 p-2 text-white transition-colors duration-200 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="everyTab">Every Tab</option>
         <option value="everyHour">Every Hour</option>
@@ -70,7 +70,7 @@ const FrequencySelect: React.FC<{
       </select>
       <button
         onClick={onRefresh}
-        className="rounded-full bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
+        className="rounded-full bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <FaSync size={16} />
       </button>
@@ -167,7 +167,7 @@ export const SettingsModal = ({
               id="background-source"
               value={bgSource}
               onChange={(e) => handleBgSourceChange(e)}
-              className="cursor-pointer rounded-lg bg-gray-700 p-2 text-white"
+              className="rounded-lg bg-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="picsum">Picsum</option>
               <option value="custom">Custom</option>
@@ -262,7 +262,7 @@ export const SettingsModal = ({
               type="text"
               value={greetingName}
               onChange={(e) => setGreetingName(e.target.value)}
-              className="h-8 w-full rounded-lg bg-gray-700 px-3 text-gray-300"
+              className="h-8 w-full rounded-lg bg-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -334,7 +334,7 @@ export const SettingsModal = ({
                   ) || searchEngines[0]
                 )
               }
-              className="rounded-lg bg-gray-700 p-2 text-white"
+              className="rounded-lg bg-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {searchEngines.map((engine) => (
                 <option
