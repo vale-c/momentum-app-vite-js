@@ -222,7 +222,7 @@ const App = () => {
   )
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative h-screen w-full overflow-hidden text-white">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out"
         style={{
@@ -230,11 +230,12 @@ const App = () => {
           filter: `brightness(${state.brightness}%)`
         }}
       />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
       <div className="relative z-10 flex h-full items-center justify-center">
         <div className="flex flex-col items-center">
           <Time />
           {state.settings.showGreeting && (
-            <h2 className="mx-8 mt-8 text-center text-3xl font-normal capitalize text-white drop-shadow-xl sm:mx-8">
+            <h2 className="mx-8 text-center text-4xl font-light capitalize tracking-wide drop-shadow-lg sm:mx-8">
               {state.greeting}, {state.greetingName}
             </h2>
           )}
