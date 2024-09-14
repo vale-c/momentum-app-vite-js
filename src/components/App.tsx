@@ -235,7 +235,7 @@ const App = () => {
         <div className="flex flex-col items-center">
           <Time />
           {state.settings.showGreeting && (
-            <h2 className="mx-8 text-center text-4xl font-light capitalize tracking-wide drop-shadow-lg sm:mx-8">
+            <h2 className="mx-8 mt-8 text-center text-3xl font-light capitalize tracking-wide drop-shadow-lg sm:mx-8">
               {state.greeting}, {state.greetingName}
             </h2>
           )}
